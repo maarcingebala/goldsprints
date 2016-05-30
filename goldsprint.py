@@ -24,15 +24,15 @@ class Speedometer(object):
         try:
             self._serial = serial.Serial(self._port, self.BAUDRATE, timeout=1)
         except serial.SerialException:
-            print "Failed to connect to %s" % self._port
+            print("Failed to connect to %s" % self._port)
         else:
-            print "Connected to: ", self._serial.name
+            print("Connected to: ", self._serial.name)
             self.is_running = True
             t = Thread(target=self._run)
             t.start()
 
     def stop(self):
-        print "Stop"
+        print("Stop")
         self.is_running = False
         self._serial.close()
 
@@ -73,7 +73,7 @@ class Race(object):
     def stop(self):
         self.end_time = time.time()
         self.is_running = False
-        print "Race time: ", self.end_time - self.start_time
+        print("Race time: ", self.end_time - self.start_time)
 
     def _run(self):
         interval = self.TIME_PRECISION  # 0.01s = 10ms
@@ -82,7 +82,7 @@ class Race(object):
             speed_kmh = self.speedometer.current_speed
             speed_ms = speed_kmh / 3.6
             if speed_kmh > 0 and self.start_ride_time == 0:
-                print "Started"
+                print("Started")
                 self.start_ride_time = time.time()
             curr_distance = speed_ms * interval
             self.curr_position += curr_distance
@@ -90,7 +90,7 @@ class Race(object):
                 time_elapsed = time.time() - self.start_ride_time
             else:
                 time_elapsed = 0
-            print "%.2fm (%.2f km/h %.2f m/s) - %.3fs" % (self.curr_position, speed_kmh, speed_ms, time_elapsed)
+            print("%.2fm (%.2f km/h %.2f m/s) - %.3fs" % (self.curr_position, speed_kmh, speed_ms, time_elapsed))
             if self.curr_position >= self.distance:
                 self.stop()
 
