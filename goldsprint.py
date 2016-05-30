@@ -1,8 +1,15 @@
+import asyncio
+import logging
 import sys
+import time
 from threading import Thread
 
 import serial
-import time
+import websockets
+
+logging.basicConfig(level=logging.INFO)
+logging.getLogger('websockets.protocol').setLevel(logging.INFO)
+logger = logging.getLogger('')
 
 PORT = '/dev/ttyACM0'  # USB port
 
@@ -11,8 +18,9 @@ def format_speed(value):
     return '%.2f km/h' % value
 
 
-class Speedometer(object):
+class SerialDataReceiver(object):
     BAUDRATE = 9600
+    TIMEOUT = 0.1
 
     def __init__(self, port):
         self.current_speed = 0
@@ -22,17 +30,17 @@ class Speedometer(object):
 
     def start(self):
         try:
-            self._serial = serial.Serial(self._port, self.BAUDRATE, timeout=1)
+            self._serial = serial.Serial(self._port, self.BAUDRATE,
+                                         timeout=self.TIMEOUT)
         except serial.SerialException:
-            print("Failed to connect to %s" % self._port)
+            logger.error("Failed to connect to %s" % self._port)
         else:
-            print("Connected to: ", self._serial.name)
             self.is_running = True
             t = Thread(target=self._run)
             t.start()
+            logger.info("Started receiver from %s" % self._serial.name)
 
     def stop(self):
-        print("Stop")
         self.is_running = False
         self._serial.close()
 
@@ -42,9 +50,9 @@ class Speedometer(object):
                 speed = self._serial.readline().strip()
             except serial.SerialException:
                 speed = ''
+            logger.debug("Received: %s" % speed)
             if speed:
                 try:
-                    # print format_speed(speed)
                     self.current_speed = float(speed)
                 except ValueError:
                     self.current_speed = 0
@@ -52,13 +60,12 @@ class Speedometer(object):
                 self.current_speed = 0
 
 
-class Race(object):
+class DistanceServer(object):
     TIME_PRECISION = 0.001
 
-    def __init__(self, speedometer):
-        self.speedometer = speedometer
+    def __init__(self, data_receiver):
+        self.data_receiver = data_receiver
         self.is_running = False
-        self.start_time = 0
         self.start_ride_time = 0
         self.end_time = 0
         self.distance = 100  # 100m
@@ -66,23 +73,26 @@ class Race(object):
 
     def start(self):
         self.is_running = True
-        self.start_time = time.time()
-        t = Thread(target=self._run)
-        t.start()
+        start_server = websockets.serve(self._run, 'localhost', 8765)
+        logger.info("Starting websocket server")
+        asyncio.get_event_loop().run_until_complete(start_server)
+        asyncio.get_event_loop().run_forever()
+
+    def reset(self):
+        self.curr_position = 0
+        self.start_ride_time = 0
 
     def stop(self):
         self.end_time = time.time()
         self.is_running = False
-        print("Race time: ", self.end_time - self.start_time)
 
-    def _run(self):
-        interval = self.TIME_PRECISION  # 0.01s = 10ms
+    async def _run(self, websocket, path):
+        interval = self.TIME_PRECISION
         while self.is_running:
-            time.sleep(interval)
-            speed_kmh = self.speedometer.current_speed
+            await asyncio.sleep(interval)
+            speed_kmh = self.data_receiver.current_speed
             speed_ms = speed_kmh / 3.6
             if speed_kmh > 0 and self.start_ride_time == 0:
-                print("Started")
                 self.start_ride_time = time.time()
             curr_distance = speed_ms * interval
             self.curr_position += curr_distance
@@ -90,9 +100,14 @@ class Race(object):
                 time_elapsed = time.time() - self.start_ride_time
             else:
                 time_elapsed = 0
-            print("%.2fm (%.2f km/h %.2f m/s) - %.3fs" % (self.curr_position, speed_kmh, speed_ms, time_elapsed))
+
+            data = b"%.2fm (%.2f km/h %.2f m/s) - %.3fs" % (self.curr_position, speed_kmh, speed_ms, time_elapsed)
+            await websocket.send(data)
+            logger.debug(data)
+
             if self.curr_position >= self.distance:
-                self.stop()
+                self.end_time = time.time()
+                self.reset()
 
 
 if __name__ == '__main__':
@@ -100,17 +115,7 @@ if __name__ == '__main__':
         port = sys.argv[1]
     except IndexError:
         port = PORT
-
-    speedometer = Speedometer(port)
-    speedometer.start()
-
-    race = Race(speedometer)
-    race.start()
-
-    if speedometer.is_running:
-        try:
-            while True:
-                time.sleep(.1)
-        except KeyboardInterrupt:
-            speedometer.stop()
-            race.stop()
+    data_receiver = SerialDataReceiver(port)
+    data_receiver.start()
+    distance_meter = DistanceServer(data_receiver)
+    distance_meter.start()
