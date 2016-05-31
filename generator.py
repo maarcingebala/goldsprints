@@ -12,7 +12,7 @@ if __name__ == '__main__':
         sys.exit(0)
     ser = serial.Serial(port)
 
-    speed_values = [20.0]
+    speed_values = [1.0, 2., 3., 4., 5., 6., 7., 9., 10., 11., 13., 15.]
     # speed_values = [10.0, 15.0, 18.0, 20.0, 25.0, 20.0, 16.0, 11.0]
     # speed_values = [3.0, 7.0, 9.0, 12.0, 15.0, 17.0, 20.0, 24.0, 25.0, 26.0, 27.0]
     randomize = True
