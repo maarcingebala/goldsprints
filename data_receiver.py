@@ -1,4 +1,5 @@
 import asyncio
+import json
 import sys
 import time
 from threading import Thread
@@ -56,6 +57,7 @@ class SerialDataReceiver(object):
 
 class DistanceServer(object):
     TIME_PRECISION = 0.01
+    WEBSOCKET_PORT = 8765
 
     def __init__(self, data_receiver):
         self.data_receiver = data_receiver
@@ -68,8 +70,8 @@ class DistanceServer(object):
     def start(self):
         if self.data_receiver.is_running:
             self.is_running = True
-            start_server = websockets.serve(self._run, 'localhost', 8765)
-            print("Starting websocket server")
+            start_server = websockets.serve(self._run, 'localhost', self.WEBSOCKET_PORT)
+            print("Starting websocket server on %s" % self.WEBSOCKET_PORT)
             asyncio.get_event_loop().run_until_complete(start_server)
             asyncio.get_event_loop().run_forever()
 
@@ -97,9 +99,13 @@ class DistanceServer(object):
             else:
                 time_elapsed = 0
 
-            data = b"%.2fm (%.2f km/h %.2f m/s) - %.3fs" % (
-                self.curr_position, speed_kmh, speed_ms, time_elapsed)
-            await websocket.send(data)
+            data = {
+                'curr_position': self.curr_position,
+                'speed_kmh': speed_kmh,
+                'speed_ms': speed_ms,
+                'time_elapsed': time_elapsed}
+
+            await websocket.send(json.dumps(data))
 
             if self.curr_position >= self.distance:
                 self.end_time = time.time()

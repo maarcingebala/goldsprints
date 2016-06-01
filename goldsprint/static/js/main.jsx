@@ -1,5 +1,6 @@
 import $ from 'jquery';
 
 $(document).ready(function() {
-  console.log("It works");
+  var ws = new WebSocket("ws://localhost:8765/");
+  ws.onmessage = function (event) { console.log(event.data); }
 });
