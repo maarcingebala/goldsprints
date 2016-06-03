@@ -100,16 +100,15 @@ class DistanceServer(object):
                 time_elapsed = 0
 
             data = {
-                'curr_position': self.curr_position,
-                'speed_kmh': speed_kmh,
-                'speed_ms': speed_ms,
-                'time_elapsed': time_elapsed}
+                'position': '%.3f' % self.curr_position,
+                'speedKmh': '%.3f' % speed_kmh,
+                'speedMs': '%.3f' % speed_ms,
+                'timeElapsed': '%.3f' % time_elapsed}
 
             await websocket.send(json.dumps(data))
-
-            if self.curr_position >= self.distance:
-                self.end_time = time.time()
-                self.reset()
+            # if self.curr_position >= self.distance:
+            #     self.end_time = time.time()
+            #     self.reset()
 
 
 if __name__ == '__main__':
