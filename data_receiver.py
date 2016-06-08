@@ -10,10 +10,6 @@ import websockets
 PORT = '/dev/ttyACM0'  # USB port
 
 
-def format_speed(value):
-    return '%.2f km/h' % value
-
-
 class SerialDataReceiver(object):
     BAUDRATE = 9600
     SERIAL_TIMEOUT = 0.1
@@ -41,7 +37,8 @@ class SerialDataReceiver(object):
         else:
             print("Start reading from %s" % self._serial.name)
             self._loop.add_reader(self._serial.fileno(), self._read_from_serial)
-            server_task = websockets.serve(self._run_server, 'localhost', self.WEBSOCKET_PORT)
+            server_task = websockets.serve(
+                self._run_server, 'localhost', self.WEBSOCKET_PORT)
             self._loop.run_until_complete(server_task)
             self._loop.run_forever()
         finally:
@@ -93,8 +90,8 @@ class SerialDataReceiver(object):
 
 if __name__ == '__main__':
     try:
-        port = sys.argv[1]
+        receiver_port = sys.argv[1]
     except IndexError:
-        port = PORT
-    data_receiver = SerialDataReceiver(port)
+        receiver_port = PORT
+    data_receiver = SerialDataReceiver(receiver_port)
     data_receiver.start()
