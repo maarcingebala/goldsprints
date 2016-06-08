@@ -1,8 +1,8 @@
 import asyncio
 import json
+import signal
 import sys
 import time
-from threading import Thread
 
 import serial
 import websockets
@@ -17,14 +17,20 @@ def format_speed(value):
 class SerialDataReceiver(object):
     BAUDRATE = 9600
     SERIAL_TIMEOUT = 0.1
+    SERVER_PRECISION = 0.01
     VALID_DATA_TIMEOUT = 0.5
+    WEBSOCKET_PORT = 8765
 
     def __init__(self, port):
-        self.current_speed = 0
-        self.is_running = False
         self._port = port
         self._serial = None
         self._last_read_time = 0
+        self._loop = asyncio.get_event_loop()
+        self._loop.add_signal_handler(getattr(signal, 'SIGINT'), self.stop)
+        self._loop.add_signal_handler(getattr(signal, 'SIGTERM'), self.stop)
+        self.current_speed = 0
+        self.current_position = 0
+        self.start_ride_time = 0
 
     def start(self):
         try:
@@ -33,64 +39,35 @@ class SerialDataReceiver(object):
         except serial.SerialException:
             print("Failed to connect to %s" % self._port)
         else:
-            self.is_running = True
-            t = Thread(target=self.read_from_serial)
-            t.start()
-            print("Started receiver from %s" % self._serial.name)
+            print("Start reading from %s" % self._serial.name)
+            self._loop.add_reader(self._serial.fileno(), self._read_from_serial)
+            server_task = websockets.serve(self._run_server, 'localhost', self.WEBSOCKET_PORT)
+            self._loop.run_until_complete(server_task)
+            self._loop.run_forever()
+        finally:
+            self._loop.close()
 
-    def read_from_serial(self):
-        while self.is_running:
-            try:
-                self.current_speed = float(self._serial.readline().strip())
-            except (serial.SerialException, ValueError):
-                pass
-            else:
-                self._last_read_time = time.time()
-                print("Received: %s" % self.current_speed)
+    def _read_from_serial(self):
+        try:
+            self.current_speed = float(self._serial.readline().strip())
+        except (serial.SerialException, ValueError) as e:
+            print("Error: %s" % e)
+        else:
+            self._last_read_time = time.time()
+            print("Received: %s" % self.current_speed)
+
+    async def _run_server(self, websocket, path):
+        print("Start websocket server on %s" % self.WEBSOCKET_PORT)
+        interval = self.SERVER_PRECISION
+        while True:
+            await asyncio.sleep(interval)
             if time.time() - self._last_read_time > self.VALID_DATA_TIMEOUT:
                 self.current_speed = 0
 
-    def stop(self):
-        self.is_running = False
-        self._serial.close()
-
-
-class DistanceServer(object):
-    TIME_PRECISION = 0.01
-    WEBSOCKET_PORT = 8765
-
-    def __init__(self, data_receiver):
-        self.data_receiver = data_receiver
-        self.is_running = False
-        self.start_ride_time = 0
-        self.end_time = 0
-        self.distance = 100  # 100m
-        self.curr_position = 0
-
-    def start(self):
-        if self.data_receiver.is_running:
-            self.is_running = True
-            start_server = websockets.serve(self._run, 'localhost', self.WEBSOCKET_PORT)
-            print("Starting websocket server on %s" % self.WEBSOCKET_PORT)
-            asyncio.get_event_loop().run_until_complete(start_server)
-            asyncio.get_event_loop().run_forever()
-
-    def reset(self):
-        self.curr_position = 0
-        self.start_ride_time = 0
-
-    def stop(self):
-        self.end_time = time.time()
-        self.is_running = False
-
-    async def _run(self, websocket, path):
-        interval = self.TIME_PRECISION
-        while self.is_running and self.data_receiver.is_running:
-            await asyncio.sleep(interval)
-            speed_kmh = self.data_receiver.current_speed
+            speed_kmh = self.current_speed
             speed_ms = speed_kmh / 3.6
             curr_distance = speed_ms * interval
-            self.curr_position += curr_distance
+            self.current_position += curr_distance
 
             if speed_kmh > 0 and self.start_ride_time == 0:
                 self.start_ride_time = time.time()
@@ -100,15 +77,18 @@ class DistanceServer(object):
                 time_elapsed = 0
 
             data = {
-                'position': '%.3f' % self.curr_position,
+                'position': '%.3f' % self.current_position,
                 'speedKmh': '%.3f' % speed_kmh,
                 'speedMs': '%.3f' % speed_ms,
                 'timeElapsed': '%.3f' % time_elapsed}
+            try:
+                await websocket.send(json.dumps(data))
+            except websockets.ConnectionClosed:
+                print("Connection closed")
 
-            await websocket.send(json.dumps(data))
-            # if self.curr_position >= self.distance:
-            #     self.end_time = time.time()
-            #     self.reset()
+    def stop(self):
+        self._serial.close()
+        self._loop.stop()
 
 
 if __name__ == '__main__':
@@ -118,5 +98,3 @@ if __name__ == '__main__':
         port = PORT
     data_receiver = SerialDataReceiver(port)
     data_receiver.start()
-    distance_meter = DistanceServer(data_receiver)
-    distance_meter.start()
