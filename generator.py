@@ -12,8 +12,8 @@ if __name__ == '__main__':
         sys.exit(0)
     ser = serial.Serial(port)
 
-    # speed_values = [1.0]
-    speed_values = [1.0, 2., 3., 4., 5., 6., 7., 9., 10., 11., 13., 15., 17., 19., 21., 25., 27., 30., 34., 37., 45.]
+    speed_values = [70.0]
+    # speed_values = [1.0, 2., 3., 4., 5., 6., 7., 9., 10., 11., 13., 15., 17., 19., 21., 25., 27., 30., 34., 37., 45.]
     randomize = False
 
     i = 0

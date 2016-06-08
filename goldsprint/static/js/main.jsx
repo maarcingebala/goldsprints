@@ -54,30 +54,37 @@ function drawClock(ctx, radius, position) {
   drawTime(ctx, radius, position);
 }
 
-$(document).ready(function() {
-  var canvas = $("#canvas")[0];
-  var ctx = canvas.getContext("2d");
-  var radius = canvas.height / 2;
-  ctx.translate(radius, radius);
-  radius = radius * 0.90;
+function createWebsocketClient($info, ctx, radius) {
+  var client = new WebSocket("ws://localhost:8765/");
 
-  //drawNumbers(ctx, radius);
-
-  var ws = new WebSocket("ws://localhost:8765/");
-
-  ws.onmessage = function (event) {
-    console.log(event.data);
+  client.onmessage = function (event) {
     var data = JSON.parse(event.data);
     drawClock(ctx, radius, data.position);
   };
 
-  ws.onerror = function (event) {
-    console.log("Error");
-    console.log(event);
+  client.onopen = function (event) {
+    $info.text('Connected');
   };
 
-  ws.onclose = function (event) {
-    console.log("Connection closed");
-    console.log(event);
+  client.onerror = function (event) {
+    $info.text('Error');
   };
+
+  client.onclose = function (event) {
+    $info.text('Connection closed');
+    setTimeout(function () {
+      createWebsocketClient($info, ctx, radius);
+    }, 2500);
+  };
+}
+
+$(document).ready(function() {
+  var $info = $('#info');
+  var $canvas = $("#canvas")[0];
+  var ctx = $canvas.getContext("2d");
+  var radius = $canvas.height / 2;
+  ctx.translate(radius, radius);
+  radius = radius * 0.90;
+
+  createWebsocketClient($info, ctx, radius);
 });
