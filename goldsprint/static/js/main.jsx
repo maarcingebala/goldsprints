@@ -45,7 +45,7 @@ function drawHand(ctx, pos, length, width) {
 }
 
 function drawTime(ctx, radius, position) {
-  position = (position * Math.PI / 30);
+  position = (position * 2 * Math.PI / 250); // 250m
   drawHand(ctx, position, radius * 0.9, radius * 0.02);
 }
 
