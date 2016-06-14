@@ -45,16 +45,20 @@ class SerialDataReceiver(object):
             self._loop.close()
 
     def _read_from_serial(self):
+        self.current_speed = 0
         try:
-            self.current_speed = float(self._serial.readline().strip())
+            raw_value = float(self._serial.readline())
+            print("Received: %s" % raw_value)
         except (serial.SerialException, ValueError) as e:
             print("Error: %s" % e)
         else:
+            if raw_value != float("inf"):
+                self.current_speed = raw_value
             self._last_read_time = time.time()
-            print("Received: %s" % self.current_speed)
 
     async def _run_server(self, websocket, path):
         print("Start websocket server on %s" % self.WEBSOCKET_PORT)
+        self.current_position = 0
         interval = self.SERVER_PRECISION
         while True:
             await asyncio.sleep(interval)
@@ -82,6 +86,7 @@ class SerialDataReceiver(object):
                 await websocket.send(json.dumps(data))
             except websockets.ConnectionClosed:
                 print("Connection closed")
+                break
 
     def stop(self):
         self._serial.close()
