@@ -25,8 +25,6 @@ class SerialDataReceiver(object):
         self._loop.add_signal_handler(getattr(signal, 'SIGINT'), self.stop)
         self._loop.add_signal_handler(getattr(signal, 'SIGTERM'), self.stop)
         self.current_speed = 0
-        self.current_position = 0
-        self.start_ride_time = 0
 
     def start(self):
         try:
@@ -58,7 +56,6 @@ class SerialDataReceiver(object):
 
     async def _run_server(self, websocket, path):
         print("Start websocket server on %s" % self.WEBSOCKET_PORT)
-        self.current_position = 0
         interval = self.SERVER_PRECISION
         while True:
             await asyncio.sleep(interval)
@@ -67,21 +64,10 @@ class SerialDataReceiver(object):
 
             speed_kmh = self.current_speed
             speed_ms = speed_kmh / 3.6
-            curr_distance = speed_ms * interval
-            self.current_position += curr_distance
-
-            if speed_kmh > 0 and self.start_ride_time == 0:
-                self.start_ride_time = time.time()
-            if self.start_ride_time > 0:
-                time_elapsed = time.time() - self.start_ride_time
-            else:
-                time_elapsed = 0
-
             data = {
-                'position': '%.3f' % self.current_position,
                 'speedKmh': '%.3f' % speed_kmh,
                 'speedMs': '%.3f' % speed_ms,
-                'timeElapsed': '%.3f' % time_elapsed}
+                'interval': '%s' % interval}
             try:
                 await websocket.send(json.dumps(data))
             except websockets.ConnectionClosed:
