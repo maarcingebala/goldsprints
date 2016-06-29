@@ -13,7 +13,7 @@ if __name__ == '__main__':
     try:
         speed_values = [int(sys.argv[2])]
     except (IndexError, ValueError):
-        speed_values = [30.0]
+        speed_values = [2., 5., 8., 15., 25.]
 
     ser = serial.Serial(port)
     randomize = False

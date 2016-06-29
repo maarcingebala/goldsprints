@@ -46,7 +46,6 @@ class SerialDataReceiver(object):
         self.current_speed = 0
         try:
             raw_value = float(self._serial.readline())
-            print("Received: %s" % raw_value)
         except (serial.SerialException, ValueError) as e:
             print("Error: %s" % e)
         else:
@@ -62,12 +61,12 @@ class SerialDataReceiver(object):
             if time.time() - self._last_read_time > self.VALID_DATA_TIMEOUT:
                 self.current_speed = 0
 
-            speed_kmh = self.current_speed
-            speed_ms = speed_kmh / 3.6
+            speed_ms = self.current_speed / 3.6
             data = {
-                'speedKmh': '%.3f' % speed_kmh,
                 'speedMs': '%.3f' % speed_ms,
-                'interval': '%s' % interval}
+                'interval': '%s' % interval
+            }
+            print("[Data] %s" % data)
             try:
                 await websocket.send(json.dumps(data))
             except websockets.ConnectionClosed:

@@ -8,7 +8,7 @@ configuration = {
   devtool: '#source-map',
   progress: true,
   entry: {
-    main: sourceDir + 'main.jsx'
+    app: sourceDir + 'app.jsx'
   },
   output: {
     filename: distDir + '[name].js'
