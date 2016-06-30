@@ -1,4 +1,4 @@
-export class WSHandler {
+class WSHandler {
   constructor(onMessageCallback) {
     var ws = new WebSocket("ws://localhost:8765/");
 
@@ -21,3 +21,5 @@ export class WSHandler {
     this.ws = ws;
   }
 }
+
+export default WSHandler;

@@ -1,16 +1,17 @@
 var React = require('react');
 
-export const Stats = React.createClass({
+class Stats extends React.Component {
 
-  getDefaultProps: function() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       position: 0,
       speed: 0,
       raceTime: 0
-    };
-  },
+    }
+  }
 
-  render: function() {
+  render() {
     var speed = this.props.speed * 3.6;
     return (
       <p>position: {this.props.position.toFixed(2)} m,
@@ -19,4 +20,6 @@ export const Stats = React.createClass({
     );
   }
 
-});
+}
+
+export default Stats;

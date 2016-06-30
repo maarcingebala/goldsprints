@@ -4,19 +4,16 @@ const COUNTDOWN_INTERVAL = 1000;
 const COUNTDOWN_FROM = 3;
 
 
-export const Countdown = React.createClass({
+class Countdown extends React.Component {
 
-  propTypes: {
-    onCountdownOver: React.PropTypes.func.isRequired
-  },
-
-  getInitialState: function() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       counter: ''
     }
-  },
+  }
 
-  start: function() {
+  start() {
     var counter = COUNTDOWN_FROM;
     var intervalId = setInterval(function() {
       if (counter > 0) {
@@ -28,11 +25,15 @@ export const Countdown = React.createClass({
         clearInterval(intervalId);
       }
     }.bind(this), COUNTDOWN_INTERVAL);
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div>{this.state.counter}</div>
     )
   }
-});
+}
+
+Countdown.propTypes = { onCountdownOver: React.PropTypes.func.isRequired };
+
+export default Countdown;

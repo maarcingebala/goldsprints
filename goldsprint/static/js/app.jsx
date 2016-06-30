@@ -1,7 +1,7 @@
-import {WSHandler} from './wshandler';
-import {Canvas} from './components/canvas';
-import {Countdown} from './components/countdown';
-import {Stats} from './components/stats';
+import WSHandler from './wshandler';
+import Canvas from './components/canvas';
+import Countdown from './components/countdown';
+import Stats from './components/stats';
 
 var React = require('react');
 var ReactDOM = require('react-dom');
@@ -9,38 +9,44 @@ var ReactDOM = require('react-dom');
 const DISTANCE = 250;
 
 
-const App = React.createClass({
+class App extends React.Component {
 
-  getInitialState: function() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       position: 0,
       speedMs: 0,
       readWs: false,
       raceTime: 0
     }
-  },
+    this.handleNewData = this.handleNewData.bind(this);
+    this.startNewRace = this.startNewRace.bind(this);
+    this.resetState = this.resetState.bind(this);
+    this.stopReceiving = this.stopReceiving.bind(this);
+    this.startCountdown = this.startCountdown.bind(this);
+  }
 
-  resetState: function() {
+  resetState() {
     this.setState({
       position: 0,
       speedMs: 0,
       raceTime: 0
     });
-  },
+  }
 
-  startReceiving: function() {
+  startReceiving() {
     this.setState({
       readWs: true
     });
-  },
+  }
 
-  stopReceiving: function() {
+  stopReceiving() {
     this.setState({
       readWs: false
     });
-  },
+  }
 
-  handleNewData: function(data) {
+  handleNewData(data) {
     if (this.state.readWs) {
       if (this.raceIsActive) {
         var speedMs = parseFloat(data.speedMs);
@@ -61,24 +67,24 @@ const App = React.createClass({
         }
       }
     }
-  },
+  }
 
-  startNewRace: function() {
+  startNewRace() {
     this.resetState();
     this.raceIsActive = true;
     this.raceTime = 0;
     this.startReceiving();
-  },
+  }
 
-  startCountdown: function() {
+  startCountdown() {
     this.refs.countdown.start()
-  },
+  }
 
-  componentWillMount: function() {
+  componentWillMount() {
     this.wsHandler = new WSHandler(this.handleNewData);
-  },
+  }
 
-  render: function() {
+  render() {
     var speeedKmh = this.state.speedMs * 3.6;
     return (
       <div>
@@ -91,9 +97,6 @@ const App = React.createClass({
       </div>
     )
   }
-});
+}
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('container')
-);
+ReactDOM.render(<App />, document.getElementById('container'));

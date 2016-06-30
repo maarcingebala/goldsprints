@@ -1,13 +1,8 @@
 var React = require('react');
 
-export const Canvas = React.createClass({
+class Canvas extends React.Component {
 
-  propTypes: {
-    position: React.PropTypes.number.isRequired,
-    distance: React.PropTypes.number.isRequired
-  },
-
-  drawFace: function() {
+  drawFace() {
     this.ctx.beginPath();
     this.ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
     this.ctx.fillStyle = 'white';
@@ -17,9 +12,9 @@ export const Canvas = React.createClass({
     this.ctx.arc(0, 0, this.radius * 0.1, 0, 2 * Math.PI);
     this.ctx.fillStyle = '#333';
     this.ctx.fill();
-  },
+  }
 
-  drawHand: function(position) {
+  drawHand(position) {
     // translate linear position to circular
     position = (position * 2 * Math.PI / this.props.distance);
     var length = this.radius * 0.9;
@@ -32,28 +27,35 @@ export const Canvas = React.createClass({
     this.ctx.lineTo(0, -length);
     this.ctx.stroke();
     this.ctx.rotate(-position);
-  },
+  }
 
-  drawPlayerPosition: function() {
+  drawPlayerPosition() {
     this.drawFace();
     this.drawHand(this.props.position);
-  },
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     this.ctx = this.refs.canvas.getContext('2d');
     this.radius = this.refs.canvas.height / 2;
     this.ctx.translate(this.radius, this.radius);
     this.radius *= 0.9;
     this.drawPlayerPosition();
-  },
+  }
 
-  componentDidUpdate: function() {
+  componentDidUpdate() {
     this.drawPlayerPosition();
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <canvas id="gameCanvas" width="500" height="500" ref="canvas" />
-    );
+    )
   }
-});
+}
+
+Canvas.propTypes = {
+  position: React.PropTypes.number.isRequired,
+  distance: React.PropTypes.number.isRequired
+}
+
+export default Canvas;
