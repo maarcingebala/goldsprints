@@ -8,21 +8,19 @@ configuration = {
   devtool: '#source-map',
   progress: true,
   entry: {
-    app: sourceDir + 'app.jsx'
+    app: sourceDir + 'app.js'
   },
   output: {
     filename: distDir + '[name].js'
   },
   module: {
     loaders: [
-      {test: /\.jsx$/, loader: "babel-loader"},
-      {test: /\.js$/, include: /node_modules\/foundation-sites/, loader: "babel-loader"},
+      {test: /\.js$/, loader: "babel-loader"},
       {test: /\.json$/, loader: 'json'},
-      //{test: require.resolve("jquery"), loader: "expose?jQueryDebug"},
     ]
   },
   resolve: {
-    extensions: ['', '.jsx', '.js']
+    extensions: ['', '.js']
   },
   plugins: [
     new webpack.ProvidePlugin({

@@ -79,7 +79,7 @@ module.exports = function (grunt) {
         tasks: ['sass', 'postcss']
       },
       uglify: {
-        files: ['<%= STATIC_DIR %>/js/**/*.js', '<%= STATIC_DIR %>/js/**/*.jsx'],
+        files: ['<%= STATIC_DIR %>/js/**/*.js', '<%= STATIC_DIR %>/js/**/*.js'],
         tasks: ['webpack:develop']
       }
     },
