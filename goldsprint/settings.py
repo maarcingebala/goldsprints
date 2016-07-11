@@ -17,6 +17,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'goldsprint.game'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -88,3 +90,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'goldsprint', 'static')
 ]
+
+DEFAULT_DISTANCE = 250

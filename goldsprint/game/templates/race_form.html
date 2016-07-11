@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ form.as_p }}
+    <button type="submit">Start race</button>
+    <a href="{% url 'game:new-player' %}">Add player</a>
+  </form>
+{% endblock %}

@@ -10,7 +10,9 @@
     <link rel="stylesheet" href="{% static 'dist/css/main.css' %}"/>
 </head>
 <body>
-    <div id="gameContainer"></div>
+    <a href="{% url 'game:menu' %}">Menu</a>
+    {% block body %}
+    {% endblock %}
     <script src="{% static 'dist/js/app.js' %}"></script>
 </body>
 </html>

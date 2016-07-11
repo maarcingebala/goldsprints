@@ -1,7 +1,7 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 
-from . import views
+from .game.urls import urlpatterns as game_urls
 
 urlpatterns = [
-    url(r'^$', views.index),
+    url(r'', include(game_urls, namespace='game')),
 ]
