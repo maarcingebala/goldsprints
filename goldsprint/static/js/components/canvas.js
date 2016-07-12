@@ -2,41 +2,45 @@ var React = require('react');
 
 class Canvas extends React.Component {
 
-  drawFace() {
-    this.ctx.beginPath();
-    this.ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
-    this.ctx.fillStyle = 'white';
-    this.ctx.fill();
+  drawFace(context) {
+    context.beginPath();
+    context.arc(0, 0, this.radius, 0, 2 * Math.PI);
+    context.lineWidth = 10;
+    context.fillStyle = 'white';
+    context.fill();
 
-    this.ctx.beginPath();
-    this.ctx.arc(0, 0, this.radius * 0.1, 0, 2 * Math.PI);
-    this.ctx.fillStyle = '#333';
-    this.ctx.fill();
+    context.beginPath();
+    context.arc(0, 0, this.radius * 0.1, 0, 2 * Math.PI);
+    context.fillStyle = '#333';
+    context.fill();
   }
 
-  drawHand(position) {
+  drawHand(context, position, color) {
     // translate linear position to circular
     position = (position * 2 * Math.PI / this.props.distance);
     var length = this.radius * 0.9;
     var width = this.radius * 0.02;
-    this.ctx.beginPath();
-    this.ctx.lineWidth = width;
-    this.ctx.lineCap = "round";
-    this.ctx.moveTo(0,0);
-    this.ctx.rotate(position);
-    this.ctx.lineTo(0, -length);
-    this.ctx.stroke();
-    this.ctx.rotate(-position);
+    context.beginPath();
+    context.lineWidth = width;
+    context.lineCap = "round";
+    context.moveTo(0, 0);
+    context.rotate(position);
+    context.lineTo(0, -length);
+    context.strokeStyle = color;
+    context.stroke();
+    context.rotate(-position);
   }
 
   drawPlayerPosition() {
-    this.drawFace();
-    this.drawHand(this.props.position);
+    this.drawFace(this.ctx);
+    this.drawHand(this.ctx, this.props.position, 'red');
+    this.drawHand(this.ctx, 0, 'blue');
   }
 
   componentDidMount() {
-    this.ctx = this.refs.canvas.getContext('2d');
-    this.radius = this.refs.canvas.height / 2;
+    this.canvas = this.refs.canvas;
+    this.ctx = this.canvas.getContext('2d');
+    this.radius = this.canvas.height / 2;
     this.ctx.translate(this.radius, this.radius);
     this.radius *= 0.9;
     this.drawPlayerPosition();
