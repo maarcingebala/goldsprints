@@ -1,3 +1,13 @@
+html,
+body {
+    height: 100%;
+}
+
+body {
+  background-size: cover;
+  background: url(../../img/miami-background.jpg) no-repeat center center;
+}
+
 #gameCanvas {
   background: #000;
   border-radius: 50%;
