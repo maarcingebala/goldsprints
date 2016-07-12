@@ -99,4 +99,4 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('gameContainer'));
+ReactDOM.render(<App />, document.getElementById('race-canvas'));

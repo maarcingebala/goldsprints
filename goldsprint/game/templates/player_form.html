@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block body %}
+{% block content %}
   <form method="post" action="{% url 'game:new-player' %}?next={% url 'game:new-race' %}">
     {% csrf_token %}
-    {{ form }}
-    <button type="submit">Save</button>
-    <a href="{% url 'game:new-race' %}">Cancel</a>
+    {{ form.as_p }}
+    <button class="button" type="submit">Save</button>
+    <a class="button" href="{% url 'game:new-race' %}">Cancel</a>
   </form>
 {% endblock %}

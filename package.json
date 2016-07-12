@@ -1,6 +1,6 @@
 {
   "name": "goldsprint",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "Gruntfile.js",
   "author": "SMPOL Software",
   "license": "",
@@ -49,6 +49,7 @@
     "babel-preset-react": "~6.0.15",
     "babel-preset-stage-0": "~6.0.15",
     "bower": "~1.3.12",
+    "bulma": "^0.1.0",
     "exports-loader": "~0.6.3",
     "grunt": "~0.4.5",
     "grunt-babel": "~6.0.0",

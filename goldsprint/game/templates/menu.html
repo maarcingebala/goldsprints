@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 
-{% block body %}
-  <h1>Main menu</h1>
-  <a href="{% url 'game:new-race' %}">Start new race</a>
-  <h2>Recent races</h2>
-  <ul>
-    {% for race in recent_races %}
-      <li><a href="{{ race.get_absolute_url }}">{{ race }}</a></li>
-    {% endfor %}
-  </ul>
+{% block content %}
+  <div class="main-menu">
+    <ul>
+      <li><a class="with-shadow" href="{% url 'game:new-race' %}">Quick race</a></li>
+    </ul>
+  </div>
+{#  <p class="subtitle is-3">Recent races</p>#}
+{#  <ul>#}
+{#    {% for race in recent_races %}#}
+{#      <li><a href="{{ race.get_absolute_url }}">{{ race }}</a></li>#}
+{#    {% endfor %}#}
+{#  </ul>#}
 {% endblock %}

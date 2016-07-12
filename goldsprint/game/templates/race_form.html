@@ -1,11 +1,44 @@
 {% extends "base.html" %}
 
-{% block body %}
-  <form method="post">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    {{ form.as_p }}
-    <button type="submit">Start race</button>
-    <a href="{% url 'game:new-player' %}">Add player</a>
-  </form>
+{% block content %}
+  <div class="columns is-centered">
+    <div class="column is-6">
+      <form method="post">
+        {% csrf_token %}
+        <p class="control">
+          <input class="input" type="text" placeholder="Distance">
+        </p>
+
+        <p class="control">
+          <span class="select">
+            <select>
+              <option>Player 1</option>
+              <option>With options</option>
+            </select>
+          </span>
+        </p>
+
+        <p class="control">
+          <span class="select">
+            <select>
+              <option>Player 2</option>
+              <option>With options</option>
+            </select>
+          </span>
+        </p>
+
+        <ul>
+          <li><a class="with-shadow" href="{% url 'game:new-player' %}">Add player</a></li>
+          <li><a class="with-shadow" href="{% url 'game:new-player' %}">Start race!</a></li>
+        </ul>
+
+        {#        <button class="button" type="submit">Start race</button>#}
+
+    {#    {{ form.non_field_errors }}#}
+    {#    {{ form.as_p }}#}
+
+
+      </form>
+    </div>
+  </div>
 {% endblock %}
