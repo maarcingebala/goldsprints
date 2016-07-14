@@ -2,5 +2,5 @@
 
 {% block content %}
   <p class="title is-1 with-shadow">{{ player_one }} vs. {{ player_two }}</p>
-  <div id="race-canvas" class="race-canvas"></div>
+  <div id="race-canvas" class="race-canvas" data-player-one="{{ player_one }}" data-player-two="{{ player_two }}"></div>
 {% endblock %}

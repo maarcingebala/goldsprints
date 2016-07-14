@@ -11,12 +11,14 @@ class PlayerForm(forms.ModelForm):
 
 
 class RaceForm(forms.ModelForm):
-    player_one = forms.ModelChoiceField(queryset=Player.objects)
-    player_two = forms.ModelChoiceField(queryset=Player.objects)
+    player_one = forms.ModelChoiceField(
+        queryset=Player.objects, empty_label='Select first player')
+    player_two = forms.ModelChoiceField(
+        queryset=Player.objects, empty_label='Select second player')
 
     class Meta:
         model = Race
-        fields = ['distance']
+        fields = []
 
     def clean(self):
         player_one = self.cleaned_data.get('player_one')
@@ -26,8 +28,6 @@ class RaceForm(forms.ModelForm):
 
     def save(self, commit=True):
         race = super(RaceForm, self).save(commit=commit)
-        print(race)
         race.players.add(self.cleaned_data['player_one'])
         race.players.add(self.cleaned_data['player_two'])
-        print(race.players.all())
         return race

@@ -1,0 +1,25 @@
+<p class="control">
+  <label for="id_{{ bound_field.html_name }}"{% if bound_field.errors %} class="is-invalid-label"{% endif %}>
+    {% if show_label %}
+      {{ label }}
+    {% endif %}
+  </label>
+
+  {% if input_type == 'select' %}
+    <span class="select">
+      <select name="{{ bound_field.html_name }}" id="id_{{ bound_field.html_name }}">
+        {% for value, name in choices %}
+          <option value="{{ value }}">{{ name }}</option>
+        {% endfor %}
+      </select>
+    </span>
+  {% else %}
+    <input class="{{ class }} {% if errors %}is-danger{% endif %}" type="{{ input_type }}" name="{{ bound_field.html_name }}" id="id_{{ bound_field.html_name }}" {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}>
+  {% endif %}
+
+  {% if errors %}
+    {% for error in errors %}
+      <span class="help is-danger">{{ error }}</span>
+    {% endfor %}
+  {% endif %}
+</p>

@@ -1,43 +1,16 @@
 {% extends "base.html" %}
 
+{% load render_field from bulma %}
+
 {% block content %}
   <div class="columns is-centered">
     <div class="column is-6">
+      <a class="with-shadow" href="{% url 'game:new-player' %}">Add player</a>
       <form method="post">
         {% csrf_token %}
-        <p class="control">
-          <input class="input" type="text" placeholder="Distance">
-        </p>
-
-        <p class="control">
-          <span class="select">
-            <select>
-              <option>Player 1</option>
-              <option>With options</option>
-            </select>
-          </span>
-        </p>
-
-        <p class="control">
-          <span class="select">
-            <select>
-              <option>Player 2</option>
-              <option>With options</option>
-            </select>
-          </span>
-        </p>
-
-        <ul>
-          <li><a class="with-shadow" href="{% url 'game:new-player' %}">Add player</a></li>
-          <li><a class="with-shadow" href="{% url 'game:new-player' %}">Start race!</a></li>
-        </ul>
-
-        {#        <button class="button" type="submit">Start race</button>#}
-
-    {#    {{ form.non_field_errors }}#}
-    {#    {{ form.as_p }}#}
-
-
+        {% render_field form.player_one %}
+        {% render_field form.player_two %}
+        <button class="link with-shadow" type="submit">Start race!</button>
       </form>
     </div>
   </div>
