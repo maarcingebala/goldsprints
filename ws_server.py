@@ -13,7 +13,7 @@ PORT = '/dev/ttyACM0'  # USB port
 class SerialDataReceiver(object):
     BAUDRATE = 9600
     SERIAL_TIMEOUT = 0.1
-    SERVER_PRECISION = 0.01
+    SERVER_PRECISION = 0.025
     VALID_DATA_TIMEOUT = 0.5
     WEBSOCKET_PORT = 8765
 
