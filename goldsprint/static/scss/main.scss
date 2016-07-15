@@ -47,3 +47,13 @@ body {
     }
   }
 }
+
+.race {
+
+  &__header {
+    p {
+      color: $primary;
+    }
+  }
+
+}

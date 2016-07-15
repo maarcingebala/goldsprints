@@ -1,6 +1,6 @@
-var React = require('react');
+import React from 'react';
 
-class Canvas extends React.Component {
+class RaceCanvas extends React.Component {
 
   drawFace(context) {
     context.beginPath();
@@ -57,9 +57,9 @@ class Canvas extends React.Component {
   }
 }
 
-Canvas.propTypes = {
+RaceCanvas.propTypes = {
   position: React.PropTypes.number.isRequired,
   distance: React.PropTypes.number.isRequired
-}
+};
 
-export default Canvas;
+export default RaceCanvas;
