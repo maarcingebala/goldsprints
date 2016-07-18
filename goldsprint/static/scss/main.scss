@@ -1,5 +1,15 @@
 @import "../../../node_modules/bulma/bulma";
 
+@font-face{
+	font-family: 'Pricedown';
+	src: url('pricedown_bl-webfont.woff');
+    src: url('pricedown_bl-webfont.woff') format('woff')
+}
+
+@mixin game-font() {
+  font-family: 'Pricedown', Arial, sans-serif;
+}
+
 html,
 body {
   height: 100%;
@@ -39,6 +49,7 @@ body {
 }
 
 .main-menu {
+  @include game-font();
   ul {
     li {
       a {
@@ -52,6 +63,7 @@ body {
 
   &__header {
     p {
+      @include game-font();
       color: $primary;
     }
   }

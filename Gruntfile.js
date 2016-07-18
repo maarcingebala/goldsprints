@@ -83,6 +83,13 @@ module.exports = function (grunt) {
         tasks: ['webpack:develop']
       }
     },
+    copy: {
+      main: {
+        files: [
+          {src: ['<%= STATIC_DIR %>/scss/pricedown_bl-webfont.woff'], dest: '<%= DIST_DIR %>/css/pricedown_bl-webfont.woff'},
+        ],
+      },
+    },
     webpack: {
       develop: developWebpackConfig
     }
@@ -92,4 +99,5 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['clean', 'sass', 'postcss', 'webpack:develop']);
   grunt.registerTask('sync', ['browserSync', 'watch']);
+  grunt.registerTask('copy-font', ['copy']);
 };
