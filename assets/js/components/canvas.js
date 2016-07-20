@@ -33,8 +33,8 @@ class RaceCanvas extends React.Component {
 
   drawPlayerPosition() {
     this.drawFace(this.ctx);
-    this.drawHand(this.ctx, this.props.position, 'red');
-    this.drawHand(this.ctx, 0, 'blue');
+    this.drawHand(this.ctx, this.props.positionA, 'red');
+    this.drawHand(this.ctx, this.props.positionB, 'blue');
   }
 
   componentDidMount() {
@@ -58,7 +58,8 @@ class RaceCanvas extends React.Component {
 }
 
 RaceCanvas.propTypes = {
-  position: React.PropTypes.number.isRequired,
+  positionA: React.PropTypes.number.isRequired,
+  positionB: React.PropTypes.number.isRequired,
   distance: React.PropTypes.number.isRequired
 };
 

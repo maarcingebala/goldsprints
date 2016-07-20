@@ -8,6 +8,8 @@ import serial
 import websockets
 
 PORT = '/dev/ttyACM0'  # USB port
+PLAYER_A = 'a'
+PLAYER_B = 'b'
 
 
 class SerialDataReceiver(object):
@@ -24,7 +26,7 @@ class SerialDataReceiver(object):
         self._loop = asyncio.get_event_loop()
         self._loop.add_signal_handler(getattr(signal, 'SIGINT'), self.stop)
         self._loop.add_signal_handler(getattr(signal, 'SIGTERM'), self.stop)
-        self.current_speed = 0
+        self.reset_speed()
 
     def start(self):
         try:
@@ -41,17 +43,27 @@ class SerialDataReceiver(object):
             self._loop.run_forever()
         finally:
             self._loop.close()
+    
+    def reset_speed(self):
+        self.speed_a = 0
+        self.speed_b = 0
 
     def _read_from_serial(self):
-        self.current_speed = 0
         try:
-            raw_value = float(self._serial.readline())
-        except (serial.SerialException, ValueError) as e:
+            line = str(self._serial.readline().decode()).strip()
+            player_id, speed = line.split('|')
+            speed = float(speed)
+            if speed != float('inf'):
+                if player_id == PLAYER_A:
+                    self.speed_a = speed
+                elif player_id == PLAYER_B:
+                    self.speed_b = speed
+                else:
+                    print('Unknown player ID : %s' % player_id)
+                self._last_read_time = time.time()
+        except Exception as e:
             print("Error: %s" % e)
-        else:
-            if raw_value != float("inf"):
-                self.current_speed = raw_value
-            self._last_read_time = time.time()
+            self.reset_speed()
 
     async def _run_server(self, websocket, path):
         print("Start websocket server on %s" % self.WEBSOCKET_PORT)
@@ -59,11 +71,11 @@ class SerialDataReceiver(object):
         while True:
             await asyncio.sleep(interval)
             if time.time() - self._last_read_time > self.VALID_DATA_TIMEOUT:
-                self.current_speed = 0
+                self.reset_speed()
 
-            speed_ms = self.current_speed / 3.6
             data = {
-                'speedMs': '%.3f' % speed_ms,
+                'speed_a': '%.3f' % (self.speed_a / 3.6),
+                'speed_b': '%.3f' % (self.speed_b / 3.6),
                 'interval': '%s' % interval
             }
             print("[Data] %s" % data)

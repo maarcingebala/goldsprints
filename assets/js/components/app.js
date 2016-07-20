@@ -20,16 +20,18 @@ class App extends React.Component {
 
   handleNewData(data) {
     if (this.props.raceIsActive) {
-      var speedMs = parseFloat(data.speedMs);
-      var interval = parseFloat(data.interval);
-      var newPosition = this.props.position + speedMs * interval;
+      let speedA = parseFloat(data.speed_a);
+      let speedB = parseFloat(data.speed_b);
+      let interval = parseFloat(data.interval);
+      let newPositionA = this.props.positionA + speedA * interval;
+      let newPositionB = this.props.positionB + speedB * interval;
 
-      if (newPosition >= this.props.distance) {
+      if (newPositionA >= this.props.distance || newPositionB >= this.props.distance) {
         console.log(`Race ended in ${raceTime} s`);
         this.props.onStopRace();
       } else {
         var raceTime = this.props.raceTime + interval;
-        this.props.onUpdatePosition(newPosition, speedMs, raceTime);
+        this.props.onUpdatePosition(newPositionA, speedA, newPositionB, speedB, raceTime);
       }
     }
   }
@@ -42,8 +44,7 @@ class App extends React.Component {
     return (
       <div className="race">
         <RaceHeader raceTime={this.props.raceTime} playerOne={this.props.playerOne} playerTwo={this.props.playerTwo} />
-        <RaceCanvas position={this.props.position} distance={this.props.distance} />
-        <Stats position={this.props.position} speed={this.props.speedMs} raceTime={this.props.raceTime} />
+        <RaceCanvas positionA={this.props.positionA} positionB={this.props.positionB} distance={this.props.distance} />
         <button onClick={() => this.props.onStart()}>Start</button>
       </div>
     )
@@ -59,8 +60,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onStart: () => {
       dispatch(startRace())
     },
-    onUpdatePosition: (position, speedMs, raceTime) => {
-      dispatch(updatePosition(position, speedMs, raceTime))
+    onUpdatePosition: (positionA, speedA, positionB, speedB, raceTime) => {
+      dispatch(updatePosition(positionA, speedA, positionB, speedB, raceTime))
     },
     onStopRace: () => {
       dispatch(stopRace())

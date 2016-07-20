@@ -5,8 +5,10 @@ const initialState = {
   playerOne: '',
   playerTwo: '',
   distance: 0,
-  position: 0,
-  speedMs: 0,
+  positionA: 0,
+  positionB: 0,
+  speedA: 0,
+  speedB: 0,
   raceTime: 0,
   raceIsActive: false
 };
@@ -31,15 +33,19 @@ function race(state = initialState, action) {
     case RESET_RACE:
       return _.assign({}, state, {
         distance: 0,
-        position: 0,
-        speedMs: 0,
+        positionA: 0,
+        positionB: 0,
+        speedA: 0,
+        speedB: 0,
         raceTime: 0,
         raceIsActive: false
       });
     case UPDATE_POSITION:
       return _.assign({}, state, {
-        position: action.position,
-        speedMs: action.speedMs,
+        positionA: action.positionA,
+        positionB: action.positionB,
+        speedA: action.speedA,
+        speedB: action.speedB,
         raceTime: action.raceTime
       });
     default:

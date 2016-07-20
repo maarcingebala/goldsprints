@@ -20,6 +20,6 @@ export function resetRace() {
   return {type: RESET_RACE}
 }
 
-export function updatePosition(position, speedMs, raceTime) {
-  return {type: UPDATE_POSITION, position, speedMs, raceTime}
+export function updatePosition(positionA, speedA, positionB, speedB, raceTime) {
+  return {type: UPDATE_POSITION, positionA, speedA, positionB, speedB, raceTime}
 }
