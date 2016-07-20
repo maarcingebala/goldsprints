@@ -1,3 +1,4 @@
+var BundleTracker = require('webpack-bundle-tracker')
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var path = require('path');
 var webpack = require('webpack');
@@ -6,45 +7,54 @@ var extractTextPlugin = new ExtractTextPlugin(
   '[name].css'
 );
 
-var providePlugin = new webpack.ProvidePlugin({
-  $: 'jquery',
-  '_': 'underscore',
-  jQuery: 'jquery',
-  'window.jQuery': 'jquery',
-});
+// var providePlugin = new webpack.ProvidePlugin({
+//   $: 'jquery',
+//   '_': 'underscore',
+//   jQuery: 'jquery',
+//   'window.jQuery': 'jquery',
+// });
 
 configuration = {
-  entry: {
-    main: './goldsprint/assets/js/main.js',
-    vendor: [
-      'bootstrap-sass',
-      'jquery'
-    ]
-  },
-
+  contex: __dirname,
   devtool: 'source-map',
+  entry: [
+    'webpack-dev-server/client?http://localhost:3000',
+    'webpack/hot/only-dev-server',
+    './assets/js/main',
+  ],
 
   output: {
-    path: path.resolve(__dirname, 'goldsprint/assets/dist/'),
-    publicPath: '',
-    filename: '[name].js'
+    path: path.resolve('./assets/bundles/'),
+    filename: '[name].js',
+    publicPath: 'http://localhost:3000/assets/bundles/'
   },
 
   module: {
     loaders: [
-      {test: /\.js$/, exclude: /node_modules/, loader: 'babel'},
+      {test: /\.js$/, exclude: /node_modules/, loaders: ['react-hot', 'babel']},
       {test: /\.scss$/, loader: ExtractTextPlugin.extract(['css?sourceMap', 'sass'])},
       {test: /\.woff$/, loader: "file?name=[name].[ext]"}
     ]
   },
 
   plugins: [
-    extractTextPlugin,
-    providePlugin
+    new BundleTracker({filename: './webpack-stats.json'}),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin(),
+    extractTextPlugin
   ],
 
   sassLoader: {
     sourceMap: true
+  },
+
+  devServer: {
+    proxy: {
+      '/': {
+        target: 'http://localhost:8000',
+        secure: false
+      }
+    }
   }
 };
 

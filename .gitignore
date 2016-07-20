@@ -65,6 +65,8 @@ target/
 !.gitignore
 !.travis*
 *.css
+*.css.map
+*.js.map
 *.log
 *.pot
 *.pyc
@@ -81,3 +83,5 @@ dist/
 
 #vagrant
 .vagrant
+
+webpack-stats.json

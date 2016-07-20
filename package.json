@@ -34,11 +34,13 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
     "node-sass": "^3.8.0",
+    "react-hot-loader": "^1.3.0",
     "sass-loader": "^4.0.0",
     "webpack": "~1.13.0",
+    "webpack-bundle-tracker": "0.0.93",
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "start": "UV_THREADPOOL_SIZE=8 webpack -d --watch"
+    "start": "node server.js"
   }
 }
