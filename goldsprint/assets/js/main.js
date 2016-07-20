@@ -8,6 +8,9 @@ import Canvas from './components/canvas';
 import race from './reducers';
 import {initialize} from './actions';
 
+import '../scss/pricedown.scss';
+import '../scss/main.scss';
+
 
 let store = createStore(race, window.devToolsExtension && window.devToolsExtension());
 

@@ -88,7 +88,7 @@ USE_TZ = False
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'goldsprint', 'static')
+    os.path.join(BASE_DIR, 'goldsprint', 'assets')
 ]
 
 DEFAULT_DISTANCE = 250

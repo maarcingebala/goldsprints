@@ -14,7 +14,7 @@ class Stats extends React.Component {
   render() {
     var speed = this.props.speed * 3.6;
     return (
-      <p>position: {this.props.position.toFixed(2)} m,
+      <p>position ee tes asdt: {this.props.position.toFixed(2)} m,
         speed: {speed.toFixed(2)} km/h,
         raceTime: {this.props.raceTime.toFixed(2)} s</p>
     );

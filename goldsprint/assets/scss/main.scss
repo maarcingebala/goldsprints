@@ -1,12 +1,6 @@
-@import "../../../node_modules/bulma/bulma";
+@import "~bulma/bulma";
 
-@font-face{
-	font-family: 'Pricedown';
-	src: url('pricedown_bl-webfont.woff');
-    src: url('pricedown_bl-webfont.woff') format('woff')
-}
-
-@mixin game-font() {
+@mixin pricedown-font() {
   font-family: 'Pricedown', Arial, sans-serif;
 }
 
@@ -17,7 +11,7 @@ body {
 }
 
 body {
-  background: url(../../img/miami-background.jpg) no-repeat center center fixed;
+  background: url(/static/img/miami-background.jpg) no-repeat center center fixed;
   background-size: cover;
 }
 
@@ -49,7 +43,7 @@ body {
 }
 
 .main-menu {
-  @include game-font();
+  @include pricedown-font();
   ul {
     li {
       a {
@@ -63,7 +57,7 @@ body {
 
   &__header {
     p {
-      @include game-font();
+      @include pricedown-font();
       color: $primary;
     }
   }
