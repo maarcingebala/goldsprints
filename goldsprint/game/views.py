@@ -6,9 +6,7 @@ from .models import Race, Player
 
 
 def menu(request):
-    recent_races = Race.objects.all()
-    return TemplateResponse(request, 'menu.html', {
-        'recent_races': recent_races})
+    return TemplateResponse(request, 'menu.html')
 
 
 def new_player(request):
@@ -39,3 +37,20 @@ def start_race(request, pk):
         'player_b': race.player_b
     }
     return TemplateResponse(request, 'race.html', ctx)
+
+
+def scores(request):
+    races = Race.objects.select_related(
+        'player_a', 'player_b').exclude(
+            race_time_a__isnull=True).exclude(
+                race_time_b__isnull=True)
+    best_times = {}
+    for race in races:
+        if not race.player_a.name in best_times or best_times[race.player_a.name] < race.race_time_a:
+            best_times[race.player_a.name] = race.race_time_a
+        if not race.player_b.name in best_times or best_times[race.player_b.name] < race.race_time_b:
+            best_times[race.player_b.name] = race.race_time_b
+    scores = [(player, best_time) for player, best_time in best_times.items()]
+    scores = sorted(scores, key=lambda score: score[1])
+    ctx = {'scores': scores}
+    return TemplateResponse(request, 'scores.html', ctx)

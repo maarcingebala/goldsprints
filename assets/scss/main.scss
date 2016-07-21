@@ -1,4 +1,17 @@
-@import "~bulma/bulma";
+$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
+
+$turquoise: #1fc8db;
+$black: #111;
+
+$link-color: $turquoise;
+$link-hover-color: $black;
+$link-hover-decoration: none;
+$text-color: $turquoise;
+
+$font-size-base: 24px;
+
+@import '~bootstrap-sass/assets/stylesheets/bootstrap';
+
 
 @mixin pricedown-font() {
   font-family: 'Pricedown', Arial, sans-serif;
@@ -21,6 +34,7 @@ body {
 
 .content-wrapper {
   padding: 20px;
+  text-align: center;
 }
 
 .game-wrapper {
@@ -33,12 +47,23 @@ body {
   min-height: 200px;
   padding-top: 80px;
   padding-bottom: 80px;
+
+  .race {
+
+    &__header {
+      p {
+        @include pricedown-font();
+        color: $turquoise;
+        font-size: $font-size-h1;
+      }
+    }
+  }
 }
 
 .return-to-menu {
   padding: 5px;
-  font-size: $size-6;
-  font-weight: $weight-bold;
+  // font-size: $size-6;
+  // font-weight: $weight-bold;
   background: rgba(black, 0.5);
 }
 
@@ -47,19 +72,14 @@ body {
   ul {
     li {
       a {
-        font-size: $size-huge;
+        font-size: $font-size-h1;
       }
     }
   }
 }
 
-.race {
-
-  &__header {
-    p {
-      @include pricedown-font();
-      color: $primary;
-    }
+.scores {
+  table td, th {
+    text-align: center;
   }
-
 }

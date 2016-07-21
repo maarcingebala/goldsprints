@@ -11,6 +11,11 @@ class PlayerForm(forms.ModelForm):
 
 
 class RaceForm(forms.ModelForm):
+    
+    def __init__(self, *args, **kwargs):
+        super(RaceForm, self).__init__(*args, **kwargs)
+        self.fields['player_a'].empty_label = "Select first player"
+        self.fields['player_b'].empty_label = "Select second player"
 
     class Meta:
         model = Race

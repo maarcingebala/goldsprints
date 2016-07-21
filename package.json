@@ -7,12 +7,14 @@
     "node": "6.3.0"
   },
   "dependencies": {
+    "axios": "^0.13.1",
     "jquery": "~2.2.0",
     "moment": "^2.14.1",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-redux": "^4.4.5",
     "redux": "^3.5.2",
+    "redux-thunk": "^2.1.0",
     "underscore": "~1.8.3"
   },
   "babel": {

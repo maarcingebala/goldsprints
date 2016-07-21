@@ -1,5 +1,7 @@
 import _ from 'lodash';
-import { INITIALIZE, START_RACE, STOP_RACE, RESET_RACE, UPDATE_POSITION } from './actions';
+import { INITIALIZE, START_RACE, STOP_RACE, RESET_RACE,
+  UPDATE_POSITION, PLAYER_FINISHED, PLAYER_A, PLAYER_B
+} from './actions';
 
 const initialState = {
   playerOne: '',
@@ -9,8 +11,11 @@ const initialState = {
   positionB: 0,
   speedA: 0,
   speedB: 0,
+  finishedA: 0,
+  finishedB: 0,
   raceTime: 0,
-  raceIsActive: false
+  raceIsActive: false,
+  saveRaceUrl: ''
 };
 
 
@@ -20,7 +25,8 @@ function race(state = initialState, action) {
       return _.assign({}, state, {
         playerOne: action.playerOne,
         playerTwo: action.playerTwo,
-        distance: action.distance
+        distance: action.distance,
+        saveRaceUrl: action.saveRaceUrl
       });
     case START_RACE:
       return _.assign({}, state, {
@@ -37,17 +43,35 @@ function race(state = initialState, action) {
         positionB: 0,
         speedA: 0,
         speedB: 0,
+        finishedA: 0,
+        finishedB: 0,
         raceTime: 0,
         raceIsActive: false
       });
     case UPDATE_POSITION:
-      return _.assign({}, state, {
-        positionA: action.positionA,
-        positionB: action.positionB,
-        speedA: action.speedA,
-        speedB: action.speedB,
-        raceTime: action.raceTime
-      });
+      if (action.player == PLAYER_A) {
+        return _.assign({}, state, {
+          positionA: action.position,
+          speedA: action.speed,
+          raceTime: action.raceTime
+        });
+      } else if (action.player == PLAYER_B) {
+        return _.assign({}, state, {
+          positionB: action.position,
+          speedB: action.speed,
+          raceTime: action.raceTime
+        });
+      }
+    case PLAYER_FINISHED:
+      if (action.player == PLAYER_A) {
+        return _.assign({}, state, {
+          finishedA: action.raceTime
+        });
+      } else if (action.player == PLAYER_B) {
+        return _.assign({}, state, {
+          finishedB: action.raceTime
+        });
+      }
     default:
       return state;
   }

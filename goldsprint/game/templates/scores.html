@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="scores">
+  <table class="table">
+    <thead>
+      <th>Position</th>
+      <th>Player</th>
+      <th>Best time</th>
+    </thead>
+    <tbody>
+      {% for score in scores %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ score.0 }}</td>
+          <td>{{ score.1 }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

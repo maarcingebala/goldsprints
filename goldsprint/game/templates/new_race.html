@@ -1,13 +1,18 @@
 {% extends "base.html" %}
 
+{% load bootstrap3 %}
+
 {% block content %}
-  <div class="columns is-centered">
-    <div class="column is-6">
-      <a class="with-shadow" href="{% url 'game:new-player' %}">Add player</a>
-      <form method="post">
+  <div class="race-form">
+    <div class="">
+      <form class="form" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button class="link with-shadow" type="submit">Start race!</button>
+        {% bootstrap_field form.player_a show_label=False %}
+        {% bootstrap_field form.player_b show_label=False %}
+        {% buttons %}
+          <a class="with-shadow" href="{% url 'game:new-player' %}" role="button">Add player</a>
+          <button class="btn btn-link with-shadow" type="submit">Start race!</button>
+        {% endbuttons %}
       </form>
     </div>
   </div>

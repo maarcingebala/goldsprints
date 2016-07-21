@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div id="race-container" data-player-a="{{ player_a }}" data-player-b="{{ player_b }}" data-distance="{{ race.distance }}"></div>
+  <div class="race">
+    <div id="race-container" data-player-a="{{ player_a }}" data-player-b="{{ player_b }}" data-distance="{{ race.distance }}"
+      data-save-race-url="{% url 'game:save-race-results' pk=race.pk %}"></div
+  </div>
 {% endblock %}

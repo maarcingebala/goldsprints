@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 
-import { startRace, updatePosition, stopRace } from './../actions';
+import { startRace, updatePosition, stopRace, playerFinished, saveRaceResults, PLAYER_A, PLAYER_B, } from './../actions';
 import RaceCanvas from './canvas';
 import RaceHeader from './header';
 import Countdown from './countdown';
@@ -26,14 +26,35 @@ class App extends React.Component {
       let newPositionA = this.props.positionA + speedA * interval;
       let newPositionB = this.props.positionB + speedB * interval;
 
-      if (newPositionA >= this.props.distance || newPositionB >= this.props.distance) {
+      let raceTime = this.props.raceTime + interval;
+
+      let finishedA = this.checkPlayerFinished(PLAYER_A, newPositionA, raceTime);
+      let finishedB = this.checkPlayerFinished(PLAYER_B, newPositionB, raceTime);
+
+      if (finishedA && finishedB) {
         console.log(`Race ended in ${raceTime} s`);
         this.props.onStopRace();
       } else {
-        var raceTime = this.props.raceTime + interval;
-        this.props.onUpdatePosition(newPositionA, speedA, newPositionB, speedB, raceTime);
+        if (!finishedA) {
+          this.props.onUpdatePosition(PLAYER_A, newPositionA, speedA, raceTime);
+        }
+        if (!finishedB) {
+          this.props.onUpdatePosition(PLAYER_B, newPositionB, speedB, raceTime);
+        }
       }
     }
+  }
+
+  checkPlayerFinished(player, position, raceTime) {
+    if ((player == PLAYER_A && this.props.finishedA > 0) || (player == PLAYER_B && this.props.finishedB > 0)) {
+      return true;
+    }
+    if (position >= this.props.distance) {
+      console.log(`Player ${player} ended in ${raceTime} s`);
+      this.props.onPlayerFinished(player, raceTime);
+      return true;
+    }
+    return false;
   }
 
   componentWillMount() {
@@ -60,11 +81,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onStart: () => {
       dispatch(startRace())
     },
-    onUpdatePosition: (positionA, speedA, positionB, speedB, raceTime) => {
-      dispatch(updatePosition(positionA, speedA, positionB, speedB, raceTime))
+    onUpdatePosition: (player, position, speed, raceTime) => {
+      dispatch(updatePosition(player, position, speed, raceTime))
     },
     onStopRace: () => {
-      dispatch(stopRace())
+      dispatch(stopRace());
+      dispatch(saveRaceResults())
+    },
+    onPlayerFinished: (player, raceTime) => {
+      dispatch(playerFinished(player, raceTime))
     }
   };
 };
