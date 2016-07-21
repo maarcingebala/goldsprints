@@ -18,7 +18,7 @@ def new_player(request):
         form.save()
         next_url = request.GET.get('next')
         return redirect(next_url)
-    return TemplateResponse(request, 'player_form.html', {'form': form})
+    return TemplateResponse(request, 'new_player.html', {'form': form})
 
 
 def new_race(request):
@@ -27,16 +27,15 @@ def new_race(request):
     if form.is_valid():
         race = form.save()
         return redirect('game:start-race', pk=race.pk)
-    return TemplateResponse(request, 'race_form.html', {'form': form})
+    return TemplateResponse(request, 'new_race.html', {'form': form})
 
 
 def start_race(request, pk):
-    qs = Race.objects.prefetch_related('players')
+    qs = Race.objects.select_related('player_a', 'player_b')
     race = get_object_or_404(qs, pk=pk)
-    players = race.players.all()
     ctx = {
         'race': race,
-        'player_one': players[0],
-        'player_two': players[1]
+        'player_a': race.player_a,
+        'player_b': race.player_b
     }
-    return TemplateResponse(request, 'start_race.html', ctx)
+    return TemplateResponse(request, 'race.html', ctx)

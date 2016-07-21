@@ -1,15 +1,12 @@
 {% extends "base.html" %}
 
-{% load render_field from bulma %}
-
 {% block content %}
   <div class="columns is-centered">
     <div class="column is-6">
       <a class="with-shadow" href="{% url 'game:new-player' %}">Add player</a>
       <form method="post">
         {% csrf_token %}
-        {% render_field form.player_one %}
-        {% render_field form.player_two %}
+        {{ form.as_p }}
         <button class="link with-shadow" type="submit">Start race!</button>
       </form>
     </div>

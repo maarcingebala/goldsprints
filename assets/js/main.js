@@ -16,11 +16,11 @@ let store = createStore(race, window.devToolsExtension && window.devToolsExtensi
 
 let raceContainer = document.getElementById('race-container');
 if (raceContainer) {
-  let playerOne = raceContainer.dataset.playerOne;
-  let playerTwo = raceContainer.dataset.playerTwo;
+  let playerA = raceContainer.dataset.playerA;
+  let playerB = raceContainer.dataset.playerB;
   let distance = parseFloat(raceContainer.dataset.distance);
 
-  store.dispatch(initialize(playerOne, playerTwo, distance));
+  store.dispatch(initialize(playerA, playerB, distance));
 
   ReactDOM.render(
     <Provider store={store}>

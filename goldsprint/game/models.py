@@ -13,20 +13,15 @@ class Player(models.Model):
 
 class Race(models.Model):
     distance = models.IntegerField(default=settings.DEFAULT_DISTANCE)
-    players = models.ManyToManyField(Player)
-    results = ArrayField(models.IntegerField(), blank=True, null=True)
+    player_a = models.ForeignKey(Player, related_name='+')
+    player_b = models.ForeignKey(Player, related_name='+')
+    race_time_a = models.DecimalField(max_digits=9, decimal_places=9, blank=True, null=True)
+    race_time_b = models.DecimalField(max_digits=9, decimal_places=9, blank=True, null=True)
 
     def get_absolute_url(self):
         return reverse('game:start-race', kwargs={'pk': self.pk})
 
     def __str__(self):
-        players = self.players.all()
-        try:
-            player_one = players[0]
-        except IndexError:
-            player_one = '?'
-        try:
-            player_two = players[1]
-        except IndexError:
-            player_two = '?'
-        return '%s vs. %s' % (player_one, player_two)
+        player_a = self.player_a or '?'
+        player_b = self.player_b or '?'
+        return '%s vs. %s' % (player_a, player_b)
