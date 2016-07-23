@@ -4,7 +4,7 @@
 
 {% block content %}
   <div class="race-form">
-    <div class="">
+    <h1 class="with-shadow">Quick race</h1>
       <form class="form" method="post">
         {% csrf_token %}
         {% bootstrap_field form.player_a show_label=False %}

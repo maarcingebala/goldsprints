@@ -28,6 +28,10 @@ body {
   background-size: cover;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  @include pricedown-font();
+}
+
 .with-shadow {
   text-shadow: 2px 2px #FF0000;
 }
@@ -45,11 +49,9 @@ body {
   transform: translate(-50%, -50%);
   min-width: 800px;
   min-height: 200px;
-  padding-top: 80px;
-  padding-bottom: 80px;
+  padding: 60px 40px;
 
   .race {
-
     &__header {
       p {
         @include pricedown-font();
@@ -58,12 +60,12 @@ body {
       }
     }
   }
+
+  
 }
 
 .return-to-menu {
   padding: 5px;
-  // font-size: $size-6;
-  // font-weight: $weight-bold;
   background: rgba(black, 0.5);
 }
 

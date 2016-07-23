@@ -33,7 +33,7 @@ configuration = {
     loaders: [
       {test: /\.js$/, exclude: /node_modules/, loaders: ['react-hot', 'babel']},
       {test: /\.scss$/, loader: ExtractTextPlugin.extract(['css?sourceMap', 'sass'])},
-      // {test: /\.woff$/, loader: "file?name=[name].[ext]"},
+      {test: /\.woff$/, loader: "file?name=[name].[ext]"},
       {
         test: /\.(eot|otf|png|svg|ttf|woff|woff2)(\?v=[0-9.]+)?$/,
         loader: 'file?name=[name].[hash].[ext]',
