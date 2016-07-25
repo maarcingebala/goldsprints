@@ -1,5 +1,8 @@
 import React from 'react';
 
+import { COLOR_A, COLOR_B } from '../actions';
+
+
 class RaceCanvas extends React.Component {
 
   drawFace(context) {
@@ -33,8 +36,8 @@ class RaceCanvas extends React.Component {
 
   drawPlayerPosition() {
     this.drawFace(this.ctx);
-    this.drawHand(this.ctx, this.props.positionA, 'red');
-    this.drawHand(this.ctx, this.props.positionB, 'blue');
+    this.drawHand(this.ctx, this.props.positionA, COLOR_A);
+    this.drawHand(this.ctx, this.props.positionB, COLOR_B);
   }
 
   componentDidMount() {

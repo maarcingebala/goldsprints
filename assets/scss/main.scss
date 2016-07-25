@@ -42,31 +42,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .game-wrapper {
-  background: rgba(black, 0.5);
+  background: rgba($black, 0.5);
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   min-width: 800px;
   min-height: 200px;
-  padding: 60px 40px;
-
-  .race {
-    &__header {
-      p {
-        @include pricedown-font();
-        color: $turquoise;
-        font-size: $font-size-h1;
-      }
-    }
-  }
-
-  
-}
-
-.return-to-menu {
-  padding: 5px;
-  background: rgba(black, 0.5);
+  padding: 10px 0;  
 }
 
 .main-menu {
@@ -80,8 +63,31 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+.race {
+  &__header {
+    p {
+      @include pricedown-font();
+      color: $turquoise;
+      font-size: $font-size-h1;
+    }
+
+    &__player {
+      text-shadow: 2px 2px $black;
+    }
+  }
+
+  &__player-stats {
+    
+  }
+}
+
 .scores {
   table td, th {
     text-align: center;
   }
+}
+
+.return-to-menu {
+  padding: 5px;
+  background: rgba($black, 0.5);
 }

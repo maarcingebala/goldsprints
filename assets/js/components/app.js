@@ -2,11 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 
-import { startRace, updatePosition, stopRace, playerFinished, saveRaceResults, PLAYER_A, PLAYER_B, } from './../actions';
+import { startRace, updatePosition, stopRace,
+  playerFinished, saveRaceResults,
+  PLAYER_A, PLAYER_B, COLOR_A, COLOR_B } from './../actions';
 import RaceCanvas from './canvas';
 import RaceHeader from './header';
+import PlayerStats from './playerStats';
 import Countdown from './countdown';
-import Stats from './stats';
 import WSHandler from './../wshandler';
 
 
@@ -25,6 +27,9 @@ class App extends React.Component {
       let interval = parseFloat(data.interval);
       let newPositionA = this.props.positionA + speedA * interval;
       let newPositionB = this.props.positionB + speedB * interval;
+
+      newPositionA = Math.round(newPositionA * 1000) / 1000;
+      newPositionB = Math.round(newPositionB * 1000) / 1000;
 
       let raceTime = this.props.raceTime + interval;
 
@@ -57,16 +62,62 @@ class App extends React.Component {
     return false;
   }
 
+  isWinnerA() {
+    if (this.props.finishedA && this.props.finishedB) {
+      if (this.props.finishedA < this.props.finishedB) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  isWinnerB() {
+    if (this.props.finishedA && this.props.finishedB) {
+      if (this.props.finishedB < this.props.finishedA) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   componentWillMount() {
     this.wsHandler = new WSHandler(this.handleNewData);
   }
 
   render() {
     return (
-      <div className="race">
-        <RaceHeader raceTime={this.props.raceTime} playerOne={this.props.playerOne} playerTwo={this.props.playerTwo} />
-        <RaceCanvas positionA={this.props.positionA} positionB={this.props.positionB} distance={this.props.distance} />
-        <button onClick={() => this.props.onStart()}>Start</button>
+      <div className="">
+        <div className="row">
+          <RaceHeader
+            raceTime={this.props.raceTime}
+            playerOne={this.props.playerOne}
+            playerTwo={this.props.playerTwo} />
+          <RaceCanvas
+            positionA={this.props.positionA}
+            positionB={this.props.positionB}
+            distance={this.props.distance} />
+        </div>
+        <div className="row">
+          <div className="col-xs-6">
+            <PlayerStats
+              player={this.props.playerOne}
+              position={this.props.positionA}
+              raceTime={this.props.finishedA}
+              isWinner={this.isWinnerA()}
+              color={COLOR_A} />
+          </div>
+          <div className="col-xs-6">
+            <PlayerStats
+              player={this.props.playerTwo}
+              position={this.props.positionB}
+              raceTime={this.props.finishedB}
+              isWinner={this.isWinnerB()}
+              color={COLOR_B} />
+          </div>
+        </div>
+        <div className="row">
+          <button className="btn btn-link with-shadow" onClick={() => this.props.onStart()}>Start</button>
+        </div>
       </div>
     )
   }
