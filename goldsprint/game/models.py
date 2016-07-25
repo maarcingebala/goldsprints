@@ -13,8 +13,8 @@ class Player(models.Model):
 
 class Race(models.Model):
     distance = models.IntegerField(default=settings.DEFAULT_DISTANCE)
-    player_a = models.ForeignKey(Player, related_name='+')
-    player_b = models.ForeignKey(Player, related_name='+')
+    player_a = models.CharField(max_length=255, default="")
+    player_b = models.CharField(max_length=255, default="")
     race_time_a = models.FloatField(blank=True, null=True)
     race_time_b = models.FloatField(blank=True, null=True)
 
@@ -22,9 +22,7 @@ class Race(models.Model):
         return reverse('game:start-race', kwargs={'pk': self.pk})
 
     def __str__(self):
-        player_a = self.player_a or '?'
-        player_b = self.player_b or '?'
-        return '%s vs. %s' % (player_a, player_b)
+        return '%s vs. %s' % (self.player_a, self.player_b)
 
     def get_winner(self):
         if self.race_time_a > self.race_time_b:

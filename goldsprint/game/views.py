@@ -29,8 +29,7 @@ def new_race(request):
 
 
 def start_race(request, pk):
-    qs = Race.objects.select_related('player_a', 'player_b')
-    race = get_object_or_404(qs, pk=pk)
+    race = get_object_or_404(Race, pk=pk)
     ctx = {
         'race': race,
         'player_a': race.player_a,
@@ -40,17 +39,16 @@ def start_race(request, pk):
 
 
 def scores(request):
-    races = Race.objects.select_related(
-        'player_a', 'player_b').exclude(
-            race_time_a__isnull=True).exclude(
-                race_time_b__isnull=True)
+    races = Race.objects.exclude(
+        race_time_a__isnull=True).exclude(
+            race_time_b__isnull=True)
 
     best_times = {}
     for race in races:
-        if not race.player_a.name in best_times or best_times[race.player_a.name] < race.race_time_a:
-            best_times[race.player_a.name] = race.race_time_a
-        if not race.player_b.name in best_times or best_times[race.player_b.name] < race.race_time_b:
-            best_times[race.player_b.name] = race.race_time_b
+        if not race.player_a in best_times or best_times[race.player_a] < race.race_time_a:
+            best_times[race.player_a] = race.race_time_a
+        if not race.player_b in best_times or best_times[race.player_b] < race.race_time_b:
+            best_times[race.player_b] = race.race_time_b
 
     scores = [(player, best_time) for player, best_time in best_times.items()]
     scores = sorted(scores, key=lambda score: score[1])

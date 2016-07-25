@@ -5,12 +5,12 @@
 {% block content %}
   <div class="race-form">
     <h1 class="with-shadow">Quick race</h1>
-      <form class="form" method="post">
+    <div class="col-md-6 col-md-offset-3">
+      <form class="form form-horizontal" method="post">
         {% csrf_token %}
         {% bootstrap_field form.player_a show_label=False %}
         {% bootstrap_field form.player_b show_label=False %}
         {% buttons %}
-          <a class="with-shadow" href="{% url 'game:new-player' %}" role="button">Add player</a>
           <button class="btn btn-link with-shadow" type="submit">Start race!</button>
         {% endbuttons %}
       </form>

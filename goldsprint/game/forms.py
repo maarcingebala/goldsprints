@@ -14,8 +14,9 @@ class RaceForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super(RaceForm, self).__init__(*args, **kwargs)
-        self.fields['player_a'].empty_label = "Select first player"
-        self.fields['player_b'].empty_label = "Select second player"
+        self.fields['player_a'].widget.attrs['placeholder'] = "First player"
+        self.fields['player_a'].widget.attrs['autofocus'] = True
+        self.fields['player_b'].widget.attrs['placeholder'] = "Second player"
 
     class Meta:
         model = Race
