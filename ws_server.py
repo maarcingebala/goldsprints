@@ -62,7 +62,7 @@ class SerialDataReceiver(object):
             average = (speed + speed_prev) / 2
             ratio = speed / average
             # puts("%s %s %s" % (speed, average, ratio))
-            if ratio > 1.25:
+            if ratio > 1.5:
                 return False
         return True
 

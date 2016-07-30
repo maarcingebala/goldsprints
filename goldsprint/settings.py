@@ -94,7 +94,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'assets')
 ]
 
-DEFAULT_DISTANCE = 250
+DEFAULT_DISTANCE = 400
 
 
 WEBPACK_LOADER = {

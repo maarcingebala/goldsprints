@@ -28,14 +28,17 @@ class SpeedGenerator(object):
     def _run(self):
         output = serial.Serial(port)
         print("Generating data on %s" % output.name)
+        temp_changed_v = self.initial_speed
         while True:
-            v = self.initial_speed
+            v = temp_changed_v
             if self.randomize:
-                if random.random() > 0.95:
+                if random.random() > 1:
                     # simulate random invalid values
-                    v += 50
-                else:
-                    v += -0.5 + random.random()
+                    v += 100
+                elif random.random() > 0.85:
+                    temp_changed_v += 10 * (-0.5 + random.random())
+                    if random.random() > 0.85:
+                        temp_changed_v = self.initial_speed
 
             interval = 1 / v
             output.write(('%s|%.2f\n' % (self.generator_id, v)).encode())
@@ -60,7 +63,7 @@ if __name__ == '__main__':
         speed_2 = 0
 
     gen_a = SpeedGenerator('a', speed_1, port, True)
-    gen_b = SpeedGenerator('b', speed_2, port)
+    gen_b = SpeedGenerator('b', speed_2, port, True)
 
     if speed_1 > 0:
         gen_a.start()
