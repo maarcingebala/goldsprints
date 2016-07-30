@@ -17,6 +17,10 @@ $font-size-base: 24px;
   font-family: 'Pricedown', Arial, sans-serif;
 }
 
+@mixin with-shadow() {
+  text-shadow: 2px 2px #FF0000;
+}
+
 html,
 body {
   height: 100%;
@@ -33,7 +37,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .with-shadow {
-  text-shadow: 2px 2px #FF0000;
+  @include with-shadow();
 }
 
 .content-wrapper {
@@ -79,6 +83,15 @@ h1, h2, h3, h4, h5, h6 {
   &__player-stats {
     
   }
+}
+
+.countdown {
+  position: absolute;
+  top: 330px;
+  left: 350px;
+  @include with-shadow();
+  @include pricedown-font();
+  font-size: 200px;
 }
 
 .scores {

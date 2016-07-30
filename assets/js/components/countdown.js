@@ -42,7 +42,9 @@ class Countdown extends React.Component {
 
   render() {
     return (
-      <div className="countdown">Countdown: {this.state.counter}</div>
+      <div className={this.state.active ? 'countdown show' : 'countdown hide'}>
+        <span>{this.state.counter}</span>
+      </div>
     )
   }
 }
