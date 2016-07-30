@@ -34,14 +34,12 @@ configuration = {
       {test: /\.js$/, exclude: /node_modules/, loaders: ['react-hot', 'babel']},
       {test: /\.scss$/, loader: ExtractTextPlugin.extract(['css?sourceMap', 'sass'])},
       {test: /\.woff$/, loader: "file?name=[name].[ext]"},
+      {test: /\.mp3$/, loader: "file?name=[name].[ext]"},
       {
-        test: /\.(eot|otf|png|svg|ttf|woff|woff2)(\?v=[0-9.]+)?$/,
+        test: /\.(eot|otf|png|svg|ttf|woff|woff2|mp3)(\?v=[0-9.]+)?$/,
         loader: 'file?name=[name].[hash].[ext]',
         include: [
-          path.resolve(__dirname, 'node_modules'),
-          path.resolve(__dirname, 'saleor/static/fonts'),
-          path.resolve(__dirname, 'saleor/static/images'),
-          path.resolve(__dirname, 'saleor/static/img')
+          path.resolve(__dirname, 'node_modules')
         ]
       }
     ]

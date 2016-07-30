@@ -1,35 +1,48 @@
 var React = require('react');
 
-const COUNTDOWN_INTERVAL = 1000;
-const COUNTDOWN_FROM = 3;
+const COUNTDOWN_FROM = 5;
 
+const SOUND_LOW = require('file!../../sounds/countdown_low.mp3');
+const SOUND_HIGH = require('file!../../sounds/countdown_high.mp3');
 
 class Countdown extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      counter: ''
-    }
   }
 
   start() {
-    var counter = COUNTDOWN_FROM;
-    var intervalId = setInterval(function() {
-      if (counter > 0) {
-        this.setState({counter: counter});
-        counter -= 1;
-      } else {
-        this.setState({counter: 'Start!'});
-        this.props.onCountdownOver();
-        clearInterval(intervalId);
-      }
-    }.bind(this), COUNTDOWN_INTERVAL);
+    this.setState({counter: COUNTDOWN_FROM, active: true});
+    this.lowTickSound.play();
+    this.interval = setInterval(this.tick, 1000);
+  }
+
+  tick() {
+    this.setState({counter: this.state.counter - 1});
+    if (this.state.counter > 0) {
+      this.lowTickSound.play();
+    } else {
+      this.setState({active: false})
+      this.highTickSound.play();
+      this.props.onCountdownOver();
+      clearInterval(this.interval);
+    }
+  }
+
+  isActive() {
+    return this.state.active;
+  }
+
+  componentWillMount() {
+    this.state = { counter: 0, active: false }
+    this.tick = this.tick.bind(this);
+    this.lowTickSound = new Audio(SOUND_LOW);
+    this.highTickSound = new Audio(SOUND_HIGH);
   }
 
   render() {
     return (
-      <div>{this.state.counter}</div>
+      <div className="countdown">Countdown: {this.state.counter}</div>
     )
   }
 }

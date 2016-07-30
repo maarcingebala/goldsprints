@@ -16,11 +16,9 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.handleNewData = this.handleNewData.bind(this);
-    //this.startCountdown = this.startCountdown.bind(this);
   }
 
-  handleNewData(data) {
+  onWebsocketMessage(data) {
     if (this.props.raceIsActive) {
       let speedA = parseFloat(data.speed_a);
       let speedB = parseFloat(data.speed_b);
@@ -40,6 +38,7 @@ class App extends React.Component {
         console.log(`Race ended in ${raceTime} s`);
         this.props.onStopRace();
       } else {
+        // TODO: Race time should be updated in separate action.
         if (!finishedA) {
           this.props.onUpdatePosition(PLAYER_A, newPositionA, speedA, raceTime);
         }
@@ -51,7 +50,8 @@ class App extends React.Component {
   }
 
   checkPlayerFinished(player, position, raceTime) {
-    if ((player == PLAYER_A && this.props.finishedA > 0) || (player == PLAYER_B && this.props.finishedB > 0)) {
+    if ((player == PLAYER_A && this.props.finishedA > 0) ||
+        (player == PLAYER_B && this.props.finishedB > 0)) {
       return true;
     }
     if (position >= this.props.distance) {
@@ -80,8 +80,18 @@ class App extends React.Component {
     return false;
   }
 
+  startCountdown() {
+    if (!this.props.raceIsActive && !this.refs.countdownComponent.isActive()) {
+      this.refs.countdownComponent.start();
+    }
+  }
+
+  onCountdownOver() {
+    this.props.onStart();
+  }
+
   componentWillMount() {
-    this.wsHandler = new WSHandler(this.handleNewData);
+    this.wsHandler = new WSHandler((data) => {this.onWebsocketMessage(data)});
   }
 
   render() {
@@ -92,6 +102,9 @@ class App extends React.Component {
             raceTime={this.props.raceTime}
             playerOne={this.props.playerOne}
             playerTwo={this.props.playerTwo} />
+          <Countdown
+            onCountdownOver={() => this.onCountdownOver()}
+            ref="countdownComponent" />
           <RaceCanvas
             positionA={this.props.positionA}
             positionB={this.props.positionB}
@@ -116,7 +129,8 @@ class App extends React.Component {
           </div>
         </div>
         <div className="row">
-          <button className="btn btn-link with-shadow" onClick={() => this.props.onStart()}>Start</button>
+          <button className="btn btn-link with-shadow"
+            onClick={() => this.startCountdown()}>Start</button>
         </div>
       </div>
     )
