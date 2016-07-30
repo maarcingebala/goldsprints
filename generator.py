@@ -31,7 +31,12 @@ class SpeedGenerator(object):
         while True:
             v = self.initial_speed
             if self.randomize:
-                v += -0.5 + random.random()
+                if random.random() > 0.95:
+                    # simulate random invalid values
+                    v += 50
+                else:
+                    v += -0.5 + random.random()
+
             interval = 1 / v
             output.write(('%s|%.2f\n' % (self.generator_id, v)).encode())
             puts(self.out_f('%s|%.2f' % (self.generator_id, v)))
@@ -54,7 +59,7 @@ if __name__ == '__main__':
     except IndexError:
         speed_2 = 0
 
-    gen_a = SpeedGenerator('a', speed_1, port)
+    gen_a = SpeedGenerator('a', speed_1, port, True)
     gen_b = SpeedGenerator('b', speed_2, port)
 
     if speed_1 > 0:
