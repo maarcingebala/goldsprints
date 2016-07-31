@@ -79,19 +79,21 @@ h1, h2, h3, h4, h5, h6 {
       text-shadow: 2px 2px $black;
     }
   }
-
-  &__player-stats {
-    
-  }
 }
 
 .countdown {
   position: absolute;
-  top: 330px;
-  left: 350px;
+  left: 0;
+  right: 0;
+  top: 40%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+
   @include with-shadow();
   @include pricedown-font();
   font-size: 200px;
+  text-align: center;
 }
 
 .scores {

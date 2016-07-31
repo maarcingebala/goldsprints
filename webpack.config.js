@@ -7,12 +7,6 @@ var extractTextPlugin = new ExtractTextPlugin(
   '[name].css'
 );
 
-// var providePlugin = new webpack.ProvidePlugin({
-//   $: 'jquery',
-//   '_': 'underscore',
-//   jQuery: 'jquery',
-//   'window.jQuery': 'jquery',
-// });
 
 configuration = {
   contex: __dirname,
