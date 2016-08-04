@@ -36,7 +36,6 @@ function game(state = initialState, action) {
       });
     case T.RESET_RACE:
       return _.assign({}, state, {
-        distance: 0,
         positionA: 0,
         positionB: 0,
         speedA: 0,

@@ -120,6 +120,7 @@ class App extends React.Component {
               className="pull-left"
               player={this.props.playerOne}
               position={this.props.positionA}
+              speed={this.props.speedA}
               raceTime={this.props.finishedA}
               isWinner={this.isWinnerA()}
               color={COLOR_A} />
@@ -127,6 +128,7 @@ class App extends React.Component {
               className="pull-right"
               player={this.props.playerTwo}
               position={this.props.positionB}
+              speed={this.props.speedB}
               raceTime={this.props.finishedB}
               isWinner={this.isWinnerB()}
               color={COLOR_B} />
