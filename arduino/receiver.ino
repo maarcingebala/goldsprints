@@ -10,7 +10,8 @@ double rpmRollerSecondPlayer;
 double rpmBicycleSecondPlayer;
 double bicycleSpeedFirstPlayer;
 double bicycleSpeedSecondPlayer;
-double lastmillis;
+double lastmillisFirst;
+double lastmillisSecond;
 
 
 void setup() {
@@ -24,31 +25,31 @@ void setup() {
 }
 
 void loop() {
- if (revolutionsFirstPlayer >= 1 ) {
-   rpmRollerFirstPlayer = (revolutionsFirstPlayer / ((millis() - lastmillis) * 0.001));
-   rpmBicycleFirstPlayer = rpmRollerFirstPlayer / rollerToBicycleWheel;
-   bicycleSpeedFirstPlayer = rpmBicycleFirstPlayer * circuitWheel * meterPerSecondToKmPerHour ;
-   lastmillis = millis();
-   Serial.print("a|");
-   Serial.println(bicycleSpeedFirstPlayer);
-   revolutionsFirstPlayer = 0;
- }
+  if (revolutionsFirstPlayer >= 1 ) {
+    rpmRollerFirstPlayer = (revolutionsFirstPlayer / ((millis() - lastmillisFirst) * 0.001));
+    rpmBicycleFirstPlayer = rpmRollerFirstPlayer / rollerToBicycleWheel;
+    bicycleSpeedFirstPlayer = rpmBicycleFirstPlayer * circuitWheel * meterPerSecondToKmPerHour ;
+    lastmillisFirst = millis();
+    Serial.print("a|");
+    Serial.println(bicycleSpeedFirstPlayer);
+    revolutionsFirstPlayer = 0;
+  }
   if (revolutionsSecondPlayer >= 1 ) {
-   rpmRollerSecondPlayer = (revolutionsSecondPlayer / ((millis() - lastmillis) * 0.001));
-   rpmBicycleFirstPlayer = rpmRollerFirstPlayer / rollerToBicycleWheel;
-   bicycleSpeedSecondPlayer = rpmBicycleSecondPlayer * circuitWheel * meterPerSecondToKmPerHour;
-   lastmillis = millis();
-   Serial.print("b|");
-   Serial.println(bicycleSpeedSecondPlayer);
-   revolutionsSecondPlayer = 0;
- }
+    rpmRollerSecondPlayer = (revolutionsSecondPlayer / ((millis() - lastmillisSecond) * 0.001));
+    rpmBicycleSecondPlayer = rpmRollerSecondPlayer / rollerToBicycleWheel;
+    bicycleSpeedSecondPlayer = rpmBicycleSecondPlayer * circuitWheel * meterPerSecondToKmPerHour;
+    lastmillisSecond = millis();
+    Serial.print("b|");
+    Serial.println(bicycleSpeedSecondPlayer);
+    revolutionsSecondPlayer = 0;
+  }
 }
 
 
 void rpm_bicycle() {
- revolutionsFirstPlayer++;
+  revolutionsFirstPlayer++;
 }
 
 void rpm_bicycle2() {
- revolutionsSecondPlayer++;
+  revolutionsSecondPlayer++;
 }
