@@ -17,12 +17,19 @@ class Race(models.Model):
     player_b = models.CharField(max_length=255, default="")
     race_time_a = models.FloatField(blank=True, null=True)
     race_time_b = models.FloatField(blank=True, null=True)
+    first_round = models.ForeignKey(
+        'Event', related_name='first_round', null=True, blank=True)
+    second_round = models.ForeignKey(
+        'Event', related_name='second_round', null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse('game:start-race', kwargs={'pk': self.pk})
 
     def __str__(self):
         return '%s vs. %s' % (self.player_a, self.player_b)
+
+    def is_finished(self):
+        return self.race_time_a and self.race_time_b
 
     def get_winner(self):
         if self.race_time_a > self.race_time_b:
@@ -37,3 +44,7 @@ class Race(models.Model):
             return self.race_time_a
         else:
             return self.race_time_b
+
+
+class Event(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)

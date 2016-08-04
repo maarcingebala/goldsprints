@@ -3,6 +3,7 @@ var WebpackDevServer = require('webpack-dev-server')
 var config = require('./webpack.config')
 
 new WebpackDevServer(webpack(config), {
+  headers: {"Access-Control-Allow-Origin": "http://localhost:8000"},
   publicPath: config.output.publicPath,
   hot: true,
   inline: true

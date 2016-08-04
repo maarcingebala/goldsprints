@@ -1,7 +1,5 @@
 import _ from 'lodash';
-import { INITIALIZE, START_RACE, STOP_RACE, RESET_RACE,
-  UPDATE_POSITION, PLAYER_FINISHED, PLAYER_A, PLAYER_B
-} from './actions';
+import * as T from '../actions/types';
 
 const initialState = {
   playerOne: '',
@@ -19,24 +17,24 @@ const initialState = {
 };
 
 
-function race(state = initialState, action) {
+function game(state = initialState, action) {
   switch (action.type) {
-    case INITIALIZE:
+    case T.INITIALIZE:
       return _.assign({}, state, {
         playerOne: action.playerOne,
         playerTwo: action.playerTwo,
         distance: action.distance,
         saveRaceUrl: action.saveRaceUrl
       });
-    case START_RACE:
+    case T.START_RACE:
       return _.assign({}, state, {
         raceIsActive: true
       });
-    case STOP_RACE:
+    case T.STOP_RACE:
       return _.assign({}, state, {
         raceIsActive: false
       });
-    case RESET_RACE:
+    case T.RESET_RACE:
       return _.assign({}, state, {
         distance: 0,
         positionA: 0,
@@ -48,26 +46,26 @@ function race(state = initialState, action) {
         raceTime: 0,
         raceIsActive: false
       });
-    case UPDATE_POSITION:
-      if (action.player == PLAYER_A) {
+    case T.UPDATE_POSITION:
+      if (action.player == T.PLAYER_A) {
         return _.assign({}, state, {
           positionA: action.position,
           speedA: action.speed,
           raceTime: action.raceTime
         });
-      } else if (action.player == PLAYER_B) {
+      } else if (action.player == T.PLAYER_B) {
         return _.assign({}, state, {
           positionB: action.position,
           speedB: action.speed,
           raceTime: action.raceTime
         });
       }
-    case PLAYER_FINISHED:
-      if (action.player == PLAYER_A) {
+    case T.PLAYER_FINISHED:
+      if (action.player == T.PLAYER_A) {
         return _.assign({}, state, {
           finishedA: action.raceTime
         });
-      } else if (action.player == PLAYER_B) {
+      } else if (action.player == T.PLAYER_B) {
         return _.assign({}, state, {
           finishedB: action.raceTime
         });
@@ -77,4 +75,4 @@ function race(state = initialState, action) {
   }
 }
 
-export default race;
+export default game;

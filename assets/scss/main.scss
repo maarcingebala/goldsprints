@@ -52,8 +52,7 @@ h1, h2, h3, h4, h5, h6 {
   left: 50%;
   transform: translate(-50%, -50%);
   min-width: 800px;
-  min-height: 200px;
-  padding: 10px 0;  
+  min-height: 200px;  
 }
 
 .main-menu {
@@ -105,4 +104,18 @@ h1, h2, h3, h4, h5, h6 {
 .return-to-menu {
   padding: 5px;
   background: rgba($black, 0.5);
+}
+
+.game-menu {
+  background: rgba($black, 0.8);
+
+  a {
+    padding: 6px 12px;
+  }
+}
+
+.race-stats {
+  background: rgba($black, 0.6);
+  margin: 0 -15px 0 -15px;
+  padding: 5px;
 }

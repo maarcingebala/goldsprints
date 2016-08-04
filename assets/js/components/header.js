@@ -1,7 +1,7 @@
 import React  from 'react';
 import moment from 'moment';
 
-import { COLOR_A, COLOR_B } from '../actions';
+import { COLOR_A, COLOR_B } from '../actions/types';
 
 
 class RaceHeader extends React.Component {

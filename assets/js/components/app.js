@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 
-import { startRace, updatePosition, stopRace,
-  playerFinished, saveRaceResults,
-  PLAYER_A, PLAYER_B, COLOR_A, COLOR_B } from './../actions';
+import {startRace, updatePosition, stopRace, playerFinished, saveRaceResults,
+  resetRace} from '../actions';
+import {PLAYER_A, PLAYER_B, COLOR_A, COLOR_B} from '../actions/types';
 import RaceCanvas from './canvas';
 import RaceHeader from './header';
 import PlayerStats from './playerStats';
@@ -86,6 +86,10 @@ class App extends React.Component {
     }
   }
 
+  resetRace() {
+    this.props.onResetRace();
+  }
+
   onCountdownOver() {
     this.props.onStart();
   }
@@ -111,16 +115,16 @@ class App extends React.Component {
             distance={this.props.distance} />
         </div>
         <div className="row">
-          <div className="col-xs-6">
+          <div className="col-xs-12">
             <PlayerStats
+              className="pull-left"
               player={this.props.playerOne}
               position={this.props.positionA}
               raceTime={this.props.finishedA}
               isWinner={this.isWinnerA()}
               color={COLOR_A} />
-          </div>
-          <div className="col-xs-6">
             <PlayerStats
+              className="pull-right"
               player={this.props.playerTwo}
               position={this.props.positionB}
               raceTime={this.props.finishedB}
@@ -129,8 +133,10 @@ class App extends React.Component {
           </div>
         </div>
         <div className="row">
-          <button className="btn btn-link with-shadow"
-            onClick={() => this.startCountdown()}>Start</button>
+          <div className="col-xs-12 game-menu">
+            <button className="btn btn-link with-shadow" onClick={() => this.startCountdown()}>Start</button>
+            <button className="btn btn-link with-shadow" onClick={() => this.resetRace()}>Reset</button>
+          </div>
         </div>
       </div>
     )
@@ -155,6 +161,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onPlayerFinished: (player, raceTime) => {
       dispatch(playerFinished(player, raceTime))
+    },
+    onResetRace: () => {
+      dispatch(resetRace())
     }
   };
 };

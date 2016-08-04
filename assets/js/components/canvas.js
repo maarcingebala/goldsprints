@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { COLOR_A, COLOR_B } from '../actions';
+import { COLOR_A, COLOR_B } from '../actions/types';
 
 
 class RaceCanvas extends React.Component {
