@@ -9,10 +9,10 @@ import RaceCanvas from './canvas';
 import RaceHeader from './header';
 import PlayerStats from './playerStats';
 import Countdown from './countdown';
-import WSHandler from './../wshandler';
+import { WSHandler, parseWsData } from './../wshandler';
 
 
-class App extends React.Component {
+class Race extends React.Component {
 
   constructor(props) {
     super(props);
@@ -20,30 +20,20 @@ class App extends React.Component {
 
   onWebsocketMessage(data) {
     if (this.props.raceIsActive) {
-      let speedA = parseFloat(data.speed_a);
-      let speedB = parseFloat(data.speed_b);
-      let interval = parseFloat(data.interval);
-      let newPositionA = this.props.positionA + speedA * interval;
-      let newPositionB = this.props.positionB + speedB * interval;
-
-      newPositionA = Math.round(newPositionA * 1000) / 1000;
-      newPositionB = Math.round(newPositionB * 1000) / 1000;
-
-      let raceTime = this.props.raceTime + interval;
-
-      let finishedA = this.checkPlayerFinished(PLAYER_A, newPositionA, raceTime);
-      let finishedB = this.checkPlayerFinished(PLAYER_B, newPositionB, raceTime);
+      let parsedData = parseWsData(this.props, data);
+      let finishedA = this.checkPlayerFinished(PLAYER_A, parsedData.newPositionA, parsedData.raceTime);
+      let finishedB = this.checkPlayerFinished(PLAYER_B, parsedData.newPositionB, parsedData.raceTime);
 
       if (finishedA && finishedB) {
-        console.log(`Race ended in ${raceTime} s`);
+        console.log(`Race ended in ${parsedData.raceTime} s`);
         this.props.onStopRace();
       } else {
         // TODO: Race time should be updated in separate action.
         if (!finishedA) {
-          this.props.onUpdatePosition(PLAYER_A, newPositionA, speedA, raceTime);
+          this.props.onUpdatePosition(PLAYER_A, parsedData.newPositionA, parsedData.speedA, parsedData.raceTime);
         }
         if (!finishedB) {
-          this.props.onUpdatePosition(PLAYER_B, newPositionB, speedB, raceTime);
+          this.props.onUpdatePosition(PLAYER_B, parsedData.newPositionB, parsedData.speedB, parsedData.raceTime);
         }
       }
     }
@@ -170,4 +160,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(Race);

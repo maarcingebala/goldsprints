@@ -13,18 +13,27 @@ const initialState = {
   finishedB: 0,
   raceTime: 0,
   raceIsActive: false,
-  saveRaceUrl: ''
+  saveRaceUrl: '',
+  mode: ''
 };
 
 
 function game(state = initialState, action) {
   switch (action.type) {
-    case T.INITIALIZE:
+    case T.INITIALIZE_RACE:
       return _.assign({}, state, {
         playerOne: action.playerOne,
         playerTwo: action.playerTwo,
         distance: action.distance,
-        saveRaceUrl: action.saveRaceUrl
+        saveRaceUrl: action.saveRaceUrl,
+        mode: T.MODE_RACE
+      });
+    case T.INITIALIZE_FREE_RIDE:
+      return _.assign({}, state, {
+        playerOne: action.playerOne,
+        playerTwo: action.playerTwo,
+        distance: action.distance,
+        mode: T.MODE_FREE_RIDE
       });
     case T.START_RACE:
       return _.assign({}, state, {

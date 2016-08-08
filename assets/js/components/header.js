@@ -11,7 +11,7 @@ class RaceHeader extends React.Component {
   }
 
   render() {
-    let raceTime = this.props.raceTime * 1000;
+    let raceTime = this.props.raceTime ? this.props.raceTime * 1000 : null;
     let styleA = { color: COLOR_A }
     let styleB = { color: COLOR_B }
     return (
@@ -21,14 +21,16 @@ class RaceHeader extends React.Component {
           <span className="with-shadow"> vs. </span>
           <span className="race__header__player" style={styleB}>{this.props.playerTwo}</span>
         </h1>
-        <h2 className="title with-shadow">{moment.utc(raceTime).format('mm:ss.SSS')}</h2>
+        <div className={raceTime !== null ? 'show' : 'hidden'}>
+          <h2 className="title with-shadow">{moment.utc(raceTime).format('mm:ss.SSS')}</h2>
+        </div>
       </div>
     )
   }
 }
 
 RaceHeader.propTypes = {
-  raceTime: React.PropTypes.number.isRequired,
+  raceTime: React.PropTypes.number,
   playerOne: React.PropTypes.string.isRequired,
   playerTwo: React.PropTypes.string.isRequired
 };

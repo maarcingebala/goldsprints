@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import redirect, get_object_or_404
 from django.template.response import TemplateResponse
 
@@ -33,8 +34,14 @@ def start_race(request, pk):
     ctx = {
         'race': race,
         'player_a': race.player_a,
-        'player_b': race.player_b
+        'player_b': race.player_b,
+        'mode': settings.MODE_RACE
     }
+    return TemplateResponse(request, 'race.html', ctx)
+
+
+def free_ride(request):
+    ctx = {'mode': settings.MODE_FREE_RIDE}
     return TemplateResponse(request, 'race.html', ctx)
 
 

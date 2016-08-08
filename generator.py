@@ -83,30 +83,30 @@ if __name__ == '__main__':
         print("No port given")
         sys.exit(0)
 
-    ## Random generator
-    # try:
-    #     speed_1 = int(sys.argv[2])
-    # except IndexError:
-    # 	speed_1 = 0
-    # try:
-    #     speed_2 = int(sys.argv[3])
-    # except IndexError:
-    #     speed_2 = 0
-    # gen_a = RandomGenerator(port, 'a', speed_1, True)
-    # gen_b = RandomGenerator(port, 'b', speed_2, True)
-    # if speed_1 > 0:
-    #     gen_a.start()
-    # if speed_2 > 0:
-    #     gen_b.start()
+    # Random generator
+    try:
+        speed_1 = int(sys.argv[2])
+    except IndexError:
+    	speed_1 = 0
+    try:
+        speed_2 = int(sys.argv[3])
+    except IndexError:
+        speed_2 = 0
+    gen_a = RandomGenerator(port, 'a', speed_1)
+    gen_b = RandomGenerator(port, 'b', speed_2)
+    if speed_1 > 0:
+        gen_a.start()
+    if speed_2 > 0:
+        gen_b.start()
 
 
     ## Logfile Generator
-    try:
-        filename = sys.argv[2]
-    except IndexError:
-        print("No logfile given")
-        sys.exit(0)
-    gen_a = LogfileGenerator(filename, port, 'a')
-    gen_b = LogfileGenerator(filename, port, 'b')
-    gen_a.start()
-    gen_b.start()
+    # try:
+    #     filename = sys.argv[2]
+    # except IndexError:
+    #     print("No logfile given")
+    #     sys.exit(0)
+    # gen_a = LogfileGenerator(filename, port, 'a')
+    # gen_b = LogfileGenerator(filename, port, 'b')
+    # gen_a.start()
+    # gen_b.start()

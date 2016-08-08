@@ -2,8 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 
-import App from './components/app';
-import {initialize} from './actions';
+import Race from './components/race';
+import FreeRide from './components/freeRide';
+import {initializeRace, initializeFreeRide} from './actions';
+import * as T from './actions/types';
 import configureStore from './store/configureStore';
 
 import '../scss/pricedown.scss';
@@ -17,13 +19,23 @@ if (raceContainer) {
   let playerB = raceContainer.dataset.playerB;
   let distance = parseFloat(raceContainer.dataset.distance);
   let saveRaceUrl = raceContainer.dataset.saveRaceUrl;
+  let mode = raceContainer.dataset.mode;
 
-  store.dispatch(initialize(playerA, playerB, distance, saveRaceUrl));
-
-  ReactDOM.render(
-    <Provider store={store}>
-      <App />
-    </Provider>,
-    raceContainer
-  );
+  if (mode === T.MODE_RACE) {
+    store.dispatch(initializeRace(playerA, playerB, distance, saveRaceUrl));
+    ReactDOM.render(
+      <Provider store={store}>
+        <Race />
+      </Provider>,
+      raceContainer
+    );
+  } else {
+    store.dispatch(initializeFreeRide(playerA, playerB, distance));
+    ReactDOM.render(
+      <Provider store={store}>
+        <FreeRide />
+      </Provider>,
+      raceContainer
+    );
+  }
 }

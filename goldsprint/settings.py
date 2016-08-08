@@ -49,7 +49,8 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages'
+                'django.contrib.messages.context_processors.messages',
+                'goldsprint.game.context_processors.template_context'
             ],
         },
     },
@@ -94,12 +95,15 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'assets')
 ]
 
-DEFAULT_DISTANCE = 400
-
-
 WEBPACK_LOADER = {
     'DEFAULT': {
         'BUNDLE_DIR_NAME': 'bundles/',
         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
     }
 }
+
+
+DEFAULT_DISTANCE = 400
+
+MODE_RACE = 'MODE_RACE'
+MODE_FREE_RIDE = 'MODE_FREE_RIDE'
