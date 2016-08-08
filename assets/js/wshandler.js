@@ -1,6 +1,6 @@
 class WSHandler {
   constructor(onMessageCallback) {
-    var ws = new WebSocket("ws://localhost:8765/");
+    let ws = new WebSocket("ws://localhost:8765/");
 
     ws.onmessage = function(event) {
       var data = JSON.parse(event.data);

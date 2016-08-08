@@ -28,6 +28,10 @@ class SerialDataReceiver(object):
         self._loop.add_signal_handler(getattr(signal, 'SIGINT'), self.stop)
         self._loop.add_signal_handler(getattr(signal, 'SIGTERM'), self.stop)
         self.reset_speed()
+        if True:
+            self.log_file = open('serial_%s.log' % int(time.time()), 'w')
+        else:
+            self.log_file = None
 
     def start(self):
         try:
@@ -44,6 +48,7 @@ class SerialDataReceiver(object):
             self._loop.run_forever()
         finally:
             self._loop.close()
+            self.log_file.close()
     
     def reset_speed(self):
         self.previous_a = 0
@@ -58,18 +63,25 @@ class SerialDataReceiver(object):
         # This excludes too high measurments:
         # average - average speed of the current and previous measurements
         # ratio - acceleration ratio  
-        if speed_prev > 0:
-            average = (speed + speed_prev) / 2
-            ratio = speed / average
+        # if speed_prev > 0:
+            # average = (speed + speed_prev) / 2
+            # ratio = speed / average
             # puts("%s %s %s" % (speed, average, ratio))
-            if ratio > 1.5:
-                return False
+            # if ratio > 2:
+            #     return False
+        if speed_prev > 0 and speed > speed_prev + 25:
+            return False
         return True
 
     def read_serial(self):
         try:
             line = str(self._serial.readline().decode()).strip()
             puts("[Serial] %s" % line)
+            if self.log_file:
+                try:
+                    self.log_file.write("%s\n" % line)
+                except Exception:
+                    puts(colored.yellow("Log write failed"))
             player_id, speed = line.split('|')
             speed = float(speed)
             if player_id == PLAYER_A and self.validate_speed(speed, self.previous_a):
@@ -80,6 +92,10 @@ class SerialDataReceiver(object):
                 self.speed_b = speed
             else:
                 puts(colored.red('Skipped line: %s' % line))
+                try:
+                    self.log_file.write("!!%s\n" % line)
+                except Exception:
+                    puts(colored.yellow("Log write failed"))
             self._last_read_time = time.time()
         except Exception as e:
             puts(colored.red("Error: %s" % e))
@@ -107,6 +123,7 @@ class SerialDataReceiver(object):
     def stop(self):
         self._serial.close()
         self._loop.stop()
+        self.log_file.close()
 
 
 if __name__ == '__main__':
