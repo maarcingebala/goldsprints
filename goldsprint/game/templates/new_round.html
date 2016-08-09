@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+
+{% block content %}
+  <!-- przerobić na rowy -->
+  <div class="game-bar game-bar__top">
+    {{ event }}
+  </div>
+  <form method="post" action="{% url 'game:add-first-round' pk=event.pk %}">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    {% for form in formset %}
+      {% for field in form.hidden_fields %}
+        {{ field }}
+      {% endfor %}
+      <div class="row">
+        <div class="col-xs-6">{% bootstrap_field form.player_a field_class="input-sm" show_label=False %}</div>
+        <div class="col-xs-6">{% bootstrap_field form.player_b field_class="input-sm" show_label=False %}</div>
+      </div>
+    {% endfor %}
+    <div class="game-bar game-bar__bottom">
+      <button class="btn btn-link with-shadow" type="submit">Save</button>
+      <a class="btn with-shadow {% if not next_race_url %}disabled{% endif %}" href="{{ next_race_url }}">Start</a>
+    </div>
+  </form>
+{% endblock %}

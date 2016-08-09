@@ -1,13 +1,8 @@
 from django import forms
+from django.forms import inlineformset_factory
 from django.forms.forms import NON_FIELD_ERRORS
 
-from .models import Race, Player
-
-
-class PlayerForm(forms.ModelForm):
-    class Meta:
-        model = Player
-        exclude = []
+from .models import Race, Event
 
 
 class RaceForm(forms.ModelForm):
@@ -27,3 +22,15 @@ class RaceForm(forms.ModelForm):
         player_b = self.cleaned_data.get('player_b')
         if not (player_a and player_b) or player_a == player_b:
             self.add_error(NON_FIELD_ERRORS, 'Invalid player choice')
+
+
+class EventForm(forms.ModelForm):
+    
+    class Meta:
+        model = Event
+        exclude = []
+
+
+FirstRoundFormset = inlineformset_factory(
+    Event, Race, fk_name='first_round', fields=('player_a', 'player_b'),
+    can_delete=False, extra=1, min_num=2)

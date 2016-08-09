@@ -47,4 +47,11 @@ class Race(models.Model):
 
 
 class Event(models.Model):
+    name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+    
+    def get_race_url(self, race):
+        return reverse('game:event-race', kwargs={'pk': self.pk, 'race_pk': race.pk})

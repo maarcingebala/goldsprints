@@ -20,9 +20,12 @@ if (raceContainer) {
   let distance = parseFloat(raceContainer.dataset.distance);
   let saveRaceUrl = raceContainer.dataset.saveRaceUrl;
   let mode = raceContainer.dataset.mode;
+  let prevRaceUrl = raceContainer.dataset.prevRaceUrl;
+  let nextRaceUrl = raceContainer.dataset.nextRaceUrl;
 
   if (mode === T.MODE_RACE) {
-    store.dispatch(initializeRace(playerA, playerB, distance, saveRaceUrl));
+    store.dispatch(initializeRace(
+      playerA, playerB, distance, saveRaceUrl, nextRaceUrl, prevRaceUrl));
     ReactDOM.render(
       <Provider store={store}>
         <Race />

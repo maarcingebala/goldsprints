@@ -4,7 +4,8 @@
   <div class="race">
     {% if mode == MODE_RACE %}
       <div id="race-container" data-player-a="{{ player_a }}" data-player-b="{{ player_b }}" data-distance="{{ race.distance }}"
-       data-save-race-url="{% url 'game:save-race-results' pk=race.pk %}" data-mode="{{ MODE_RACE }}"></div>
+       data-save-race-url="{% url 'game:save-race-results' pk=race.pk %}" data-mode="{{ MODE_RACE }}"
+       {% if next_race_url %}data-next-race-url="{{ next_race_url }}"{% endif %} {% if prev_race_url %}data-prev-race-url="{{ prev_race_url }}{% endif %}"></div>
     {% else %}
       <div id="race-container" data-player-a="Player A" data-player-b="Player B" data-distance="{{ DEFAULT_DISTANCE }}" data-mode="{{ MODE_FREE_RIDE }}"></div>
     {% endif %}

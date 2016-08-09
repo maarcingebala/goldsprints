@@ -126,8 +126,10 @@ class Race extends React.Component {
         </div>
         <div className="row">
           <div className="col-xs-12 game-menu">
+            <a className="btn btn-link with-shadow pull-left" href={this.props.prevRaceUrl}>Previous</a>
             <button className="btn btn-link with-shadow" onClick={() => this.startCountdown()}>Start</button>
             <button className="btn btn-link with-shadow" onClick={() => this.resetRace()}>Reset</button>
+            <a className="btn btn-link with-shadow pull-right" href={this.props.nextRaceUrl}>Next</a>
           </div>
         </div>
       </div>

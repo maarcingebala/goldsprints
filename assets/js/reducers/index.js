@@ -14,6 +14,8 @@ const initialState = {
   raceTime: 0,
   raceIsActive: false,
   saveRaceUrl: '',
+  nextRaceUrl: '',
+  prevRaceUrl: '',
   mode: ''
 };
 
@@ -26,6 +28,8 @@ function game(state = initialState, action) {
         playerTwo: action.playerTwo,
         distance: action.distance,
         saveRaceUrl: action.saveRaceUrl,
+        nextRaceUrl: action.nextRaceUrl,
+        prevRaceUrl: action.prevRaceUrl,
         mode: T.MODE_RACE
       });
     case T.INITIALIZE_FREE_RIDE:

@@ -12,6 +12,8 @@ PORT = '/dev/ttyACM0'  # USB port
 PLAYER_A = 'a'
 PLAYER_B = 'b'
 
+WRITE_LOGFILE = False;
+
 
 class SerialDataReceiver(object):
     BAUDRATE = 9600
@@ -28,7 +30,7 @@ class SerialDataReceiver(object):
         self._loop.add_signal_handler(getattr(signal, 'SIGINT'), self.stop)
         self._loop.add_signal_handler(getattr(signal, 'SIGTERM'), self.stop)
         self.reset_speed()
-        if True:
+        if WRITE_LOGFILE:
             self.log_file = open('serial_%s.log' % int(time.time()), 'w')
         else:
             self.log_file = None

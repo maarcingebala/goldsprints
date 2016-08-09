@@ -1,8 +1,8 @@
 import * as T from './types';
 import axios from 'axios';
 
-export function initializeRace(playerOne, playerTwo, distance, saveRaceUrl) {
-  return {type: T.INITIALIZE_RACE, playerOne, playerTwo, distance, saveRaceUrl}
+export function initializeRace(playerOne, playerTwo, distance, saveRaceUrl, nextRaceUrl, prevRaceUrl) {
+  return {type: T.INITIALIZE_RACE, playerOne, playerTwo, distance, saveRaceUrl, nextRaceUrl, prevRaceUrl}
 }
 
 export function initializeFreeRide(playerOne, playerTwo, distance) {

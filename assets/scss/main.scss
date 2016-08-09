@@ -8,7 +8,9 @@ $link-hover-color: $black;
 $link-hover-decoration: none;
 $text-color: $turquoise;
 
-$font-size-base: 24px;
+$font-size-base: 18px;
+$border-radius-base: 0px;
+$input-bg: rgba(255, 255, 255, 0.5);
 
 @import '~bootstrap-sass/assets/stylesheets/bootstrap';
 
@@ -24,7 +26,7 @@ $font-size-base: 24px;
 html,
 body {
   height: 100%;
-  overflow: hidden;
+  overflow: hidden;  
 }
 
 body {
@@ -40,6 +42,12 @@ h1, h2, h3, h4, h5, h6 {
   @include with-shadow();
 }
 
+.return-to-menu {
+  padding: 5px;
+  background: rgba($black, 0.5);
+  text-transform: uppercase;
+}
+
 .content-wrapper {
   padding: 20px;
   text-align: center;
@@ -52,7 +60,36 @@ h1, h2, h3, h4, h5, h6 {
   left: 50%;
   transform: translate(-50%, -50%);
   min-width: 800px;
-  min-height: 200px;  
+  min-height: 200px;
+
+  .game-bar {
+    @include with-shadow();
+    text-transform: uppercase;
+    background: rgba($black, 0.8);
+    margin: 0 -15px 0 -15px;
+    position: absolute;
+    width: 100%;
+    min-height: 40px;
+
+    a {
+      padding: 6px 12px;
+    }
+
+    &__bottom {
+      bottom: 0;
+    }
+
+    &__top {
+      top: 0;
+    }
+  }
+
+  form {
+    padding-bottom: 50px;
+    button, a {
+      text-transform: uppercase;
+    }
+  }
 }
 
 .main-menu {
@@ -101,16 +138,13 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-.return-to-menu {
-  padding: 5px;
-  background: rgba($black, 0.5);
-}
-
 .game-menu {
   background: rgba($black, 0.8);
-
-  a {
+  a {    
     padding: 6px 12px;
+  }
+  button, a {
+    text-transform: uppercase;
   }
 }
 
