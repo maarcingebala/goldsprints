@@ -29,6 +29,11 @@ body {
   overflow: hidden;  
 }
 
+body, a:hover, a:focus, button {
+  // cursor: url(http://cur.cursors-4u.net/cursors/cur-2/cur116.cur), progress !important;
+  cursor: url(http://ani.cursors-4u.net/cursors/cur-12/cur1103.ani), url(http://ani.cursors-4u.net/cursors/cur-12/cur1103.png), progress !important;
+}
+
 body {
   background: url(/assets/img/miami-background.jpg) no-repeat center center fixed;
   background-size: cover;
@@ -66,8 +71,6 @@ h1, h2, h3, h4, h5, h6 {
     @include with-shadow();
     text-transform: uppercase;
     background: rgba($black, 0.8);
-    margin: 0 -15px 0 -15px;
-    position: absolute;
     width: 100%;
     min-height: 40px;
 
@@ -75,20 +78,13 @@ h1, h2, h3, h4, h5, h6 {
       padding: 6px 12px;
     }
 
-    &__bottom {
-      bottom: 0;
-    }
-
-    &__top {
-      top: 0;
+    a, button {
+      text-transform: uppercase;
     }
   }
 
-  form {
-    padding-bottom: 50px;
-    button, a {
-      text-transform: uppercase;
-    }
+  .middle-row {
+    padding: 20px 0;
   }
 }
 
