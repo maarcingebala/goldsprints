@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
+import moment from 'moment';
 
 import Race from './components/race';
 import FreeRide from './components/freeRide';
@@ -42,3 +43,11 @@ if (raceContainer) {
     );
   }
 }
+
+
+import $ from 'jquery';
+$('.scores__time').each(function() {
+  let rawTime = $(this).text();
+  rawTime = parseFloat(rawTime) * 1000;
+  $(this).text(moment.utc(rawTime).format('mm:ss.SSS'));
+});

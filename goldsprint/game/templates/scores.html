@@ -1,22 +1,36 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="scores">
-  <table class="table">
-    <thead>
-      <th>Position</th>
-      <th>Player</th>
-      <th>Best time</th>
-    </thead>
-    <tbody>
-      {% for score in scores %}
-        <tr>
-          <td>{{ forloop.counter }}</td>
-          <td>{{ score.0 }}</td>
-          <td>{{ score.1 }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="row">
+  <div class="game-bar">
+      <span id="title">{{ event }} - scores</span>
+  </div>
+</div>
+<div class="row">
+  <div class="scores">
+    <table class="table">
+      <thead>
+        <th>Position</th>
+        <th>Player</th>
+        <th>Time</th>
+      </thead>
+      <tbody>
+        {% for score in scores %}
+          <tr>
+            <td class="col-xs-4">{{ forloop.counter }}</td>
+            <td class="col-xs-4">{{ score.0 }}</td>
+            <td class="col-xs-4">
+              <span class="scores__time">{{ score.1 }}</span>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="game-bar">
+      
+  </div>
 </div>
 {% endblock %}

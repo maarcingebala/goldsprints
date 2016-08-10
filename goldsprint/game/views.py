@@ -11,6 +11,11 @@ def menu(request):
     return TemplateResponse(request, 'menu.html')
 
 
+def free_ride(request):
+    ctx = {'mode': settings.MODE_FREE_RIDE}
+    return TemplateResponse(request, 'race.html', ctx)
+
+
 def new_race(request):
     race = Race()
     form = RaceForm(request.POST or None, instance=race)
@@ -29,29 +34,6 @@ def start_race(request, pk):
         'mode': settings.MODE_RACE
     }
     return TemplateResponse(request, 'race.html', ctx)
-
-
-def free_ride(request):
-    ctx = {'mode': settings.MODE_FREE_RIDE}
-    return TemplateResponse(request, 'race.html', ctx)
-
-
-def scores(request):
-    races = Race.objects.exclude(
-        race_time_a__isnull=True).exclude(
-            race_time_b__isnull=True)
-
-    best_times = {}
-    for race in races:
-        if not race.player_a in best_times or best_times[race.player_a] < race.race_time_a:
-            best_times[race.player_a] = race.race_time_a
-        if not race.player_b in best_times or best_times[race.player_b] < race.race_time_b:
-            best_times[race.player_b] = race.race_time_b
-
-    scores = [(player, best_time) for player, best_time in best_times.items()]
-    scores = sorted(scores, key=lambda score: score[1])
-    ctx = {'scores': scores}
-    return TemplateResponse(request, 'scores.html', ctx)
 
 
 def new_event(request):
@@ -96,7 +78,7 @@ def event_race(request, pk, race_pk):
         next_race_url = event.get_race_url(next_race)
     except Race.DoesNotExist:
         next_race = None
-        next_race_url = None
+        next_race_url = reverse('game:round-scores', kwargs={'pk': event.pk})
 
     ctx = {
         'race': this_race,
@@ -107,3 +89,21 @@ def event_race(request, pk, race_pk):
         'prev_race_url': prev_race_url
     }
     return TemplateResponse(request, 'race.html', ctx)
+
+
+def round_scores(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    races = event.first_round.exclude(
+        race_time_a__isnull=True).exclude(race_time_b__isnull=True)
+
+    best_times = {}
+    for race in races:
+        if not race.player_a in best_times or best_times[race.player_a] < race.race_time_a:
+            best_times[race.player_a] = race.race_time_a
+        if not race.player_b in best_times or best_times[race.player_b] < race.race_time_b:
+            best_times[race.player_b] = race.race_time_b
+
+    scores = [(player, best_time) for player, best_time in best_times.items()]
+    scores = sorted(scores, key=lambda score: score[1])
+    ctx = {'scores': scores, 'event': event}
+    return TemplateResponse(request, 'scores.html', ctx)

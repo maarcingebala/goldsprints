@@ -1,7 +1,8 @@
 $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 
-$turquoise: #1fc8db;
+$red: #FF0000;
 $black: #111;
+$turquoise: #1fc8db;
 
 $link-color: $turquoise;
 $link-hover-color: $black;
@@ -11,6 +12,7 @@ $text-color: $turquoise;
 $font-size-base: 18px;
 $border-radius-base: 0px;
 $input-bg: rgba(255, 255, 255, 0.5);
+$table-border-color: rgba($red, 0.2);
 
 @import '~bootstrap-sass/assets/stylesheets/bootstrap';
 
@@ -20,7 +22,23 @@ $input-bg: rgba(255, 255, 255, 0.5);
 }
 
 @mixin with-shadow() {
-  text-shadow: 2px 2px #FF0000;
+  text-shadow: 2px 2px $red;
+}
+
+@mixin game-bar() {
+  @include with-shadow();
+  text-transform: uppercase;
+  background: rgba($black, 0.8);
+  width: 100%;
+  min-height: 40px;
+
+  a {
+    padding: 6px 12px;
+  }
+
+  a, button {
+    text-transform: uppercase;
+  }
 }
 
 html,
@@ -68,19 +86,7 @@ h1, h2, h3, h4, h5, h6 {
   min-height: 200px;
 
   .game-bar {
-    @include with-shadow();
-    text-transform: uppercase;
-    background: rgba($black, 0.8);
-    width: 100%;
-    min-height: 40px;
-
-    a {
-      padding: 6px 12px;
-    }
-
-    a, button {
-      text-transform: uppercase;
-    }
+    @include game-bar();
   }
 
   .middle-row {
@@ -131,6 +137,21 @@ h1, h2, h3, h4, h5, h6 {
 .scores {
   table td, th {
     text-align: center;
+  }
+
+  thead {
+    @include game-bar();
+
+    tr {
+      th {
+        border-bottom: none;
+        font-weight: normal;
+      }
+    }
+  }
+
+  td {
+    text-transform: uppercase;
   }
 }
 
