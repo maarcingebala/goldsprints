@@ -50,8 +50,9 @@ class SerialDataReceiver(object):
             self._loop.run_forever()
         finally:
             self._loop.close()
-            self.log_file.close()
-    
+            if self.log_file:
+                self.log_file.close()
+
     def reset_speed(self):
         self.previous_a = 0
         self.previous_b = 0
