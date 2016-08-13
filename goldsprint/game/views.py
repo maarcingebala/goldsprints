@@ -80,7 +80,7 @@ def event_race(request, pk, race_pk):
         next_race_url = event.get_race_url(next_race)
     except Race.DoesNotExist:
         next_race = None
-        next_race_url = reverse('game:round-scores', kwargs={'pk': event.pk})
+        next_race_url = reverse('game:add-first-round', kwargs={'pk': event.pk})
 
     ctx = {
         'race': this_race,

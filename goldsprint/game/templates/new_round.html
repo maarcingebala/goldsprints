@@ -17,7 +17,13 @@
           {{ field }}
         {% endfor %}
         <div class="row">
-          <div class="col-xs-1 col-xs-offset-1 round-form__position">{{ forloop.counter }}</div>
+          <div class="col-xs-1 col-xs-offset-1 round-form__position">
+            {% if form.instance.pk %}
+              <a href="{% url 'game:event-race' pk=event.pk race_pk=form.instance.pk %}">{{ forloop.counter }}</a>
+            {% else %}
+              {{ forloop.counter }}
+            {% endif %}
+          </div>
           <div class="col-xs-4 ">{% bootstrap_field form.player_a field_class="input-sm" show_label=False %}</div>
           <div class="col-xs-4">{% bootstrap_field form.player_b field_class="input-sm" show_label=False %}</div>
           <div class="col-xs-1">{% bootstrap_field form.DELETE field_class="input-sm" show_label=False %}</div>
