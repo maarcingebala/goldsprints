@@ -7,6 +7,7 @@ class RaceCanvas extends React.Component {
 
   drawFace(context) {
     context.beginPath();
+
     context.arc(0, 0, this.radius, 0, 2 * Math.PI);
     context.lineWidth = 10;
     context.fillStyle = 'white';
@@ -17,6 +18,29 @@ class RaceCanvas extends React.Component {
     context.fillStyle = '#333';
     context.fill();
   }
+
+  drawNumbers(ctx, distance) {
+    let diff = distance / 4;
+    let indexes = [1, 2, 3, 4];
+    let txtValues = indexes.map((i) => { return (i * diff).toString() });
+
+    let ang;
+    let num;
+    ctx.font = this.radius * 0.15 + "px arial";
+    ctx.textBaseline="middle";
+    ctx.textAlign="center";
+
+    for (let i of indexes) {
+      ang = i * Math.PI / 2;
+      ctx.rotate(ang);
+      ctx.translate(0, -this.radius * 0.85);
+      ctx.rotate(-ang);
+      ctx.fillText(txtValues[i - 1], 0, 0);
+      ctx.rotate(ang);
+      ctx.translate(0, this.radius * 0.85);
+      ctx.rotate(-ang);
+    }
+}
 
   drawHand(context, position, color) {
     // translate linear position to circular
@@ -36,6 +60,7 @@ class RaceCanvas extends React.Component {
 
   drawPlayerPosition() {
     this.drawFace(this.ctx);
+    this.drawNumbers(this.ctx, this.props.distance);
     this.drawHand(this.ctx, this.props.positionA, COLOR_A);
     this.drawHand(this.ctx, this.props.positionB, COLOR_B);
   }
