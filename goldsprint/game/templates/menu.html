@@ -3,6 +3,7 @@
 {% block content %}
   <div class="main-menu">
     <ul class="list-unstyled">
+      {% if last_event %} <li><a class="with-shadow" href="{{ last_event.get_absolute_url }}">Continue {{ last_event }}</a></li>{% endif %}
       <li><a class="with-shadow" href="{% url 'game:new-event' %}">New event</a></li>
       <li><a class="with-shadow" href="{% url 'game:new-race' %}">Quick race</a></li>
       <li><a class="with-shadow" href="{% url 'game:free-ride' %}">Free ride</a></li>

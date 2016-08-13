@@ -5,11 +5,11 @@
 {% block content %}
   <div class="row">
     <div class="game-bar">
-      {{ event }}
+      <span class="title">{{ event }}</span>
     </div>
   </div>
   <div class="row middle-row">
-    <form id="first-round-form" method="post" action="{% url 'game:add-first-round' pk=event.pk %}">
+    <form id="round-form" method="post" action="{% url 'game:add-first-round' pk=event.pk %}" autocomplete="off">
       {% csrf_token %}
       {{ formset.management_form }}
       {% for form in formset %}
@@ -17,7 +17,8 @@
           {{ field }}
         {% endfor %}
         <div class="row">
-          <div class="col-xs-4 col-xs-offset-2">{% bootstrap_field form.player_a field_class="input-sm" show_label=False %}</div>
+          <div class="col-xs-1 col-xs-offset-1 round-form__position">{{ forloop.counter }}</div>
+          <div class="col-xs-4 ">{% bootstrap_field form.player_a field_class="input-sm" show_label=False %}</div>
           <div class="col-xs-4">{% bootstrap_field form.player_b field_class="input-sm" show_label=False %}</div>
           <div class="col-xs-1">{% bootstrap_field form.DELETE field_class="input-sm" show_label=False %}</div>
         </div>
@@ -26,8 +27,9 @@
   </div>
   <div class="row">
     <div class="game-bar game-bar__bottom">
-      <button class="btn btn-link with-shadow" type="submit" form="first-round-form">Save</button>
+      <button class="btn btn-link with-shadow" type="submit" form="round-form">Save</button>
       <a class="btn with-shadow {% if not next_race_url %}disabled{% endif %}" href="{{ next_race_url }}">Start</a>
+      <a class="btn with-shadow" href="{% url 'game:round-scores' pk=event.pk  %}">Scores</a>
     </div>
   </div>
 {% endblock %}

@@ -92,8 +92,8 @@ if __name__ == '__main__':
         speed_2 = int(sys.argv[3])
     except IndexError:
         speed_2 = 0
-    gen_a = RandomGenerator(port, 'a', speed_1)
-    gen_b = RandomGenerator(port, 'b', speed_2)
+    gen_a = RandomGenerator(port, 'a', speed_1, randomize=True)
+    gen_b = RandomGenerator(port, 'b', speed_2, randomize=True)
     if speed_1 > 0:
         gen_a.start()
     if speed_2 > 0:

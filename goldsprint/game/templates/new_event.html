@@ -3,11 +3,22 @@
 {% load bootstrap3 %}
 
 {% block content %}
-  <form method="post" action="{% url 'game:new-event' %}">
-    {% csrf_token %}
-    {% bootstrap_field form.name show_label=False %}
-    <div class="game-bar game-bar__bottom">
-      <button class="btn btn-link with-shadow" type="submit">OK</button>
+  <div class="row">
+    <div class="game-bar">
+      <span class="title">New event</span>
     </div>
-  </form>
+  </div>
+  <div class="row middle-row">
+    <div class="col-xs-8 col-xs-offset-2">
+      <form id="new-event-form" class="form form-horizontal" method="post" autocomplete="off">
+        {% csrf_token %}
+        {% bootstrap_field form.name show_label=False %}
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="game-bar game-bar__bottom">
+      <button class="btn btn-link with-shadow" form="new-event-form" type="submit">OK</button>
+    </div>
+  </div>
 {% endblock %}

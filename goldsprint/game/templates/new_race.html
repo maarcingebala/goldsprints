@@ -3,17 +3,23 @@
 {% load bootstrap3 %}
 
 {% block content %}
-  <div class="race-form">
-    <h1 class="with-shadow">New race</h1>
-    <div class="col-md-6 col-md-offset-3">
-      <form class="form form-horizontal" method="post">
+  <div class="row">
+    <div class="game-bar">
+      <span class="title">Quick race</span>
+    </div>
+  </div>
+  <div class="row middle-row">
+    <div class="col-xs-8 col-xs-offset-2">
+      <form id="quick-race-form" class="form form-horizontal" method="post" autocomplete="off">
         {% csrf_token %}
         {% bootstrap_field form.player_a show_label=False %}
         {% bootstrap_field form.player_b show_label=False %}
-        {% buttons %}
-          <button class="btn btn-link with-shadow" type="submit">Start race!</button>
-        {% endbuttons %}
       </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="game-bar game-bar__bottom">
+      <button class="btn btn-link with-shadow" type="submit" form="quick-race-form">Start</button>
     </div>
   </div>
 {% endblock %}

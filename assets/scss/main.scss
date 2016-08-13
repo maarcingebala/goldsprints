@@ -13,6 +13,7 @@ $font-size-base: 18px;
 $border-radius-base: 0px;
 $input-bg: rgba(255, 255, 255, 0.5);
 $table-border-color: rgba($red, 0.2);
+$input-color-placeholder: rgba($black, 0.3);
 
 @import '~bootstrap-sass/assets/stylesheets/bootstrap';
 
@@ -39,17 +40,17 @@ $table-border-color: rgba($red, 0.2);
   a, button {
     text-transform: uppercase;
   }
+
+  .title {
+    display: inline-block;
+    padding: 6px 12px;
+  }
 }
 
 html,
 body {
   height: 100%;
-  overflow: hidden;  
-}
-
-body, a:hover, a:focus, button {
-  // cursor: url(http://cur.cursors-4u.net/cursors/cur-2/cur116.cur), progress !important;
-  cursor: url(http://ani.cursors-4u.net/cursors/cur-12/cur1103.ani), url(http://ani.cursors-4u.net/cursors/cur-12/cur1103.png), progress !important;
+  text-align: center;
 }
 
 body {
@@ -65,25 +66,25 @@ h1, h2, h3, h4, h5, h6 {
   @include with-shadow();
 }
 
-.return-to-menu {
-  padding: 5px;
-  background: rgba($black, 0.5);
-  text-transform: uppercase;
+.content-wrapper {
+  padding: 20px 0;
 }
 
-.content-wrapper {
-  padding: 20px;
-  text-align: center;
+.top-menu {
+  padding-bottom: 50px;
+  z-index: 1;
+
+  a {
+    @include with-shadow(); 
+    padding: 5px;
+    background: rgba($black, 0.5);
+    text-transform: uppercase;
+  }
 }
 
 .game-wrapper {
   background: rgba($black, 0.5);
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   min-width: 800px;
-  min-height: 200px;
 
   .game-bar {
     @include game-bar();
@@ -170,4 +171,16 @@ h1, h2, h3, h4, h5, h6 {
   background: rgba($black, 0.6);
   margin: 0 -15px 0 -15px;
   padding: 5px;
+
+  .player-name {
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+}
+
+
+.round-form {
+  &__position {
+    padding: 10px 0;
+  }
 }

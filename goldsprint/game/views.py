@@ -8,7 +8,9 @@ from .models import Race, Event
 
 
 def menu(request):
-    return TemplateResponse(request, 'menu.html')
+    last_event = Event.objects.last()
+    ctx = {'last_event': last_event}
+    return TemplateResponse(request, 'menu.html', ctx)
 
 
 def free_ride(request):

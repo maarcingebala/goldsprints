@@ -89,10 +89,12 @@ class Race extends React.Component {
   }
 
   render() {
+    const { prevRaceUrl, nextRaceUrl } = this.props;
     return (
       <div className="">
         <div className="row">
           <RaceHeader
+            showRaceTime={true}
             raceTime={this.props.raceTime}
             playerOne={this.props.playerOne}
             playerTwo={this.props.playerTwo} />
@@ -126,10 +128,10 @@ class Race extends React.Component {
         </div>
         <div className="row">
           <div className="col-xs-12 game-menu">
-            <a className="btn btn-link with-shadow pull-left" href={this.props.prevRaceUrl}>Previous</a>
+            {prevRaceUrl ? (<a className="btn btn-link with-shadow pull-left" href={prevRaceUrl}>Previous</a>) : (null)}
             <button className="btn btn-link with-shadow" onClick={() => this.startCountdown()}>Start</button>
             <button className="btn btn-link with-shadow" onClick={() => this.resetRace()}>Reset</button>
-            <a className="btn btn-link with-shadow pull-right" href={this.props.nextRaceUrl}>Next</a>
+            {nextRaceUrl ? (<a className="btn btn-link with-shadow pull-right" href={nextRaceUrl}>Next</a>) : (null)}
           </div>
         </div>
       </div>

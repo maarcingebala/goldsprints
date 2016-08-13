@@ -33,4 +33,4 @@ class EventForm(forms.ModelForm):
 
 FirstRoundFormset = inlineformset_factory(
     Event, Race, fk_name='first_round', fields=('player_a', 'player_b'),
-    can_delete=True, extra=1, min_num=2)
+    can_delete=True, extra=1)

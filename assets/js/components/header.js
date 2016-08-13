@@ -5,25 +5,19 @@ import { COLOR_A, COLOR_B } from '../actions/types';
 
 
 class RaceHeader extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    let raceTime = this.props.raceTime ? this.props.raceTime * 1000 : null;
+    let { raceTime, playerOne, playerTwo, showRaceTime } = this.props;
     let styleA = { color: COLOR_A }
     let styleB = { color: COLOR_B }
+    raceTime = raceTime ? raceTime * 1000 : 0;
     return (
       <div className="race__header">
         <h1 className="title">
-          <span className="race__header__player" style={styleA}>{this.props.playerOne}</span>
+          <span className="race__header__player" style={styleA}>{playerOne}</span>
           <span className="with-shadow"> vs. </span>
-          <span className="race__header__player" style={styleB}>{this.props.playerTwo}</span>
+          <span className="race__header__player" style={styleB}>{playerTwo}</span>
         </h1>
-        <div className={raceTime !== null ? 'show' : 'hidden'}>
-          <h2 className="title with-shadow">{moment.utc(raceTime).format('mm:ss.SSS')}</h2>
-        </div>
+        {showRaceTime ? (<h2 className="title with-shadow">{moment.utc(raceTime).format('mm:ss.SSS')}</h2>) : (null)}
       </div>
     )
   }

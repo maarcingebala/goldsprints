@@ -56,6 +56,9 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('game:add-first-round', kwargs={'pk': self.pk})
     
     def get_race_url(self, race):
         return reverse('game:event-race', kwargs={'pk': self.pk, 'race_pk': race.pk})

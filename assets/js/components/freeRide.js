@@ -29,6 +29,7 @@ class FreeRide extends React.Component {
       <div className="">
         <div className="row">
           <RaceHeader
+            showRaceTime={false}
             playerOne={this.props.playerOne}
             playerTwo={this.props.playerTwo} />
           <RaceCanvas

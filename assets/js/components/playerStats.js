@@ -14,8 +14,9 @@ class PlayerStats extends React.Component {
     let speedKmh = (this.props.speed * 3.6).toFixed();
     return (
       <div className={"race-stats " + this.props.className}>
-        <p style={style}>{this.props.player}</p>
+        <p className="player-name" style={style}>{this.props.player}</p>
         <p>{speedKmh} km/h</p>
+        <p>{moment.utc(raceTime).format('mm:ss.SSS')}</p>
         <p className={this.props.isWinner ? 'show' : 'hidden'}>WINNER!</p>
       </div>
     )
@@ -32,6 +33,3 @@ PlayerStats.propTypes = {
 };
 
 export default PlayerStats;
-
-
-/* <p>{this.props.position} : {moment.utc(raceTime).format('mm:ss.SSS')}</p> */

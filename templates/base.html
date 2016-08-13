@@ -10,12 +10,12 @@
   {% render_bundle 'main' 'css' %}
 </head>
 <body>
-  <div class="">
-    <div class="content-wrapper">
-      <a class="return-to-menu with-shadow" href="{% url 'game:menu' %}">menu</a>
-      <div class="container game-wrapper">
-        {% block content %}{% endblock %}
-      </div>
+  <div class="content-wrapper">
+    <div class="top-menu">
+      <a href="{% url 'game:menu' %}">menu</a>
+    </div>
+    <div class="container game-wrapper">
+      {% block content %}{% endblock %}
     </div>
   </div>
   {% render_bundle 'main' 'js' %}
