@@ -66,9 +66,9 @@ class Race extends React.Component {
   getWinner() {
     const { finishedA, finishedB, playerOne, playerTwo } = this.props;
     if (finishedA < finishedB) {
-      return playerOne;
+      return { name: playerOne, color: COLOR_A };
     } else if (finishedA > finishedB) {
-      return playerTwo;
+      return { name: playerTwo, color: COLOR_B };
     } else {
       return null;
     }

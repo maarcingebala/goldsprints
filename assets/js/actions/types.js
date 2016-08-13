@@ -5,7 +5,7 @@ export const MODE_RACE = 'MODE_RACE';
 export const MODE_FREE_RIDE = 'MODE_FREE_RIDE';
 
 export const COLOR_A = 'red';
-export const COLOR_B = 'blue';
+export const COLOR_B = 'yellow';
 
 export const INITIALIZE_RACE = 'INITIALIZE_RACE';
 export const INITIALIZE_FREE_RIDE = 'INITIALIZE_FREE_RIDE';
