@@ -36,12 +36,12 @@ class Race(models.Model):
         return self.race_time_a and self.race_time_b
 
     def get_winner(self):
-        if self.race_time_a > self.race_time_b:
-            return self.player_a
-        elif self.race_time_b > self.race_time_a:
-            return self.player_b
-        else:
-            return None
+        if self.race_time_a and self.race_time_b:
+            if self.race_time_a > self.race_time_b:
+                return self.player_a
+            elif self.race_time_b > self.race_time_a:
+                return self.player_b
+        return None
 
     def get_best_time(self):
         if self.race_time_a > self.race_time_b:

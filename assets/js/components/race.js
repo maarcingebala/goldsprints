@@ -5,10 +5,11 @@ import { connect } from 'react-redux';
 import {startRace, updatePosition, stopRace, playerFinished, saveRaceResults,
   resetRace} from '../actions';
 import {PLAYER_A, PLAYER_B, COLOR_A, COLOR_B} from '../actions/types';
+import Countdown from './countdown';
 import RaceCanvas from './canvas';
 import RaceHeader from './header';
 import PlayerStats from './playerStats';
-import Countdown from './countdown';
+import Winner from './winner';
 import { WSHandler, parseWsData } from './../wshandler';
 
 
@@ -52,24 +53,6 @@ class Race extends React.Component {
     return false;
   }
 
-  isWinnerA() {
-    if (this.props.finishedA && this.props.finishedB) {
-      if (this.props.finishedA < this.props.finishedB) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  isWinnerB() {
-    if (this.props.finishedA && this.props.finishedB) {
-      if (this.props.finishedB < this.props.finishedA) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   startCountdown() {
     if (!this.props.raceIsActive && !this.refs.countdownComponent.isActive()) {
       this.refs.countdownComponent.start();
@@ -78,6 +61,17 @@ class Race extends React.Component {
 
   resetRace() {
     this.props.onResetRace();
+  }
+
+  getWinner() {
+    const { finishedA, finishedB, playerOne, playerTwo } = this.props;
+    if (finishedA < finishedB) {
+      return playerOne;
+    } else if (finishedA > finishedB) {
+      return playerTwo;
+    } else {
+      return null;
+    }
   }
 
   onCountdownOver() {
@@ -89,7 +83,8 @@ class Race extends React.Component {
   }
 
   render() {
-    const { prevRaceUrl, nextRaceUrl } = this.props;
+    const { prevRaceUrl, nextRaceUrl, finishedA, finishedB } = this.props;
+    const canShowWinner = finishedA && finishedB;
     return (
       <div className="">
         <div className="row">
@@ -98,6 +93,7 @@ class Race extends React.Component {
             raceTime={this.props.raceTime}
             playerOne={this.props.playerOne}
             playerTwo={this.props.playerTwo} />
+          {canShowWinner ? (<Winner winner={this.getWinner()} />) : (null)}
           <Countdown
             onCountdownOver={() => this.onCountdownOver()}
             ref="countdownComponent" />
@@ -114,7 +110,6 @@ class Race extends React.Component {
               position={this.props.positionA}
               speed={this.props.speedA}
               raceTime={this.props.finishedA}
-              isWinner={this.isWinnerA()}
               color={COLOR_A} />
             <PlayerStats
               className="pull-right"
@@ -122,7 +117,6 @@ class Race extends React.Component {
               position={this.props.positionB}
               speed={this.props.speedB}
               raceTime={this.props.finishedB}
-              isWinner={this.isWinnerB()}
               color={COLOR_B} />
           </div>
         </div>

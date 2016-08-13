@@ -184,3 +184,28 @@ h1, h2, h3, h4, h5, h6 {
     padding: 10px 0;
   }
 }
+
+
+// @keyframes blinking-border {
+//     from {text-shadow: 2px 2px $red;}
+//     to {text-shadow: 2px 2px $black;}
+// }
+
+.winner {
+  text-transform: uppercase;
+  background: rgba($black, 0.8);
+  padding: 20px 50px;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 40%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+
+  h1 {
+    @include with-shadow();
+    // animation: blinking-border 0.5s linear infinite;
+  }
+}

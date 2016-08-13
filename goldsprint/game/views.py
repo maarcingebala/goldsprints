@@ -66,19 +66,28 @@ def add_first_round(request, pk):
 def event_race(request, pk, race_pk):
     event = get_object_or_404(Event, pk=pk)
     this_race = get_object_or_404(Race, pk=race_pk)
-    races = event.first_round.all()
-    race_pk = int(race_pk)
+    races = list(event.first_round.all())
 
-    try:
-        prev_race = races.get(pk=race_pk - 1)
-        prev_race_url = event.get_race_url(prev_race)
-    except Race.DoesNotExist:
+    this_race_index = 0
+    for i, race in enumerate(races):
+        if race == this_race:
+            this_race_index = i
+
+    if this_race_index == 0:
         prev_race = None
         prev_race_url = reverse('game:add-first-round', kwargs={'pk': event.pk})
+    else:
+        try:
+            prev_race = races[this_race_index - 1]
+            prev_race_url = event.get_race_url(prev_race)
+        except IndexError:
+            prev_race = None
+            prev_race_url = reverse('game:add-first-round', kwargs={'pk': event.pk})
+
     try:
-        next_race = races.get(pk=race_pk + 1)
+        next_race = races[this_race_index + 1]
         next_race_url = event.get_race_url(next_race)
-    except Race.DoesNotExist:
+    except IndexError:
         next_race = None
         next_race_url = reverse('game:add-first-round', kwargs={'pk': event.pk})
 
