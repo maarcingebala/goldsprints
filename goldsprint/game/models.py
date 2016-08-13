@@ -37,9 +37,9 @@ class Race(models.Model):
 
     def get_winner(self):
         if self.race_time_a and self.race_time_b:
-            if self.race_time_a > self.race_time_b:
+            if self.race_time_a < self.race_time_b:
                 return self.player_a
-            elif self.race_time_b > self.race_time_a:
+            elif self.race_time_b < self.race_time_a:
                 return self.player_b
         return None
 
