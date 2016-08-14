@@ -3,6 +3,7 @@ import json
 import signal
 import sys
 import time
+from collections import deque
 
 import serial
 import websockets
@@ -13,6 +14,51 @@ PLAYER_A = 'a'
 PLAYER_B = 'b'
 
 WRITE_LOGFILE = False;
+
+
+class Buffer(object):
+    # Buffer size
+    SIZE = 5
+
+    # Maxiumum number of values to skip. If skipped MAX_SKIP values in row,
+    # assume that the value is correct and allow it.
+    MAX_SKIP = 5
+
+    def __init__(self, *args, **kwargs):
+        self._buffer = deque(maxlen=self.SIZE)
+        self.skipped_count = 0
+
+    def append(self, value):
+        # Reject infinite value
+        if value == float('inf'):
+            return False
+
+        # Check too high values
+        avg = self.avg()
+        if avg > 0 and self.skipped_count < self.MAX_SKIP:
+            # under 20km/h check for values two times higher
+            if value < 20 and value > avg * 2:
+                self.skipped_count += 1
+                return False
+            elif value > 20 and value > avg * 1.5:
+                self.skipped_count += 1
+                return False
+
+        # Value is ok, append to buffer
+        self._buffer.append(value)
+        self.skipped_count = 0
+        return True
+
+    def clear(self):
+        self._buffer.clear()
+        self._buffer.append(0)
+
+    def avg(self):
+        buffer_len = len(self._buffer)
+        if buffer_len > 0:
+            return sum(self._buffer) / buffer_len
+        else:
+            return 0
 
 
 class SerialDataReceiver(object):
@@ -29,11 +75,8 @@ class SerialDataReceiver(object):
         self._loop = asyncio.get_event_loop()
         self._loop.add_signal_handler(getattr(signal, 'SIGINT'), self.stop)
         self._loop.add_signal_handler(getattr(signal, 'SIGTERM'), self.stop)
-        self.reset_speed()
-        if WRITE_LOGFILE:
-            self.log_file = open('serial_%s.log' % int(time.time()), 'w')
-        else:
-            self.log_file = None
+        self.buffer_a = Buffer()
+        self.buffer_b = Buffer()
 
     def start(self):
         try:
@@ -50,83 +93,61 @@ class SerialDataReceiver(object):
             self._loop.run_forever()
         finally:
             self._loop.close()
-            if self.log_file:
-                self.log_file.close()
-
-    def reset_speed(self):
-        self.previous_a = 0
-        self.previous_b = 0
-        self.speed_a = 0
-        self.speed_b = 0
-
-    def validate_speed(self, speed, speed_prev):
-        if speed == float('inf'):
-            return False
-
-        # This excludes too high measurments:
-        # average - average speed of the current and previous measurements
-        # ratio - acceleration ratio  
-        # if speed_prev > 0:
-            # average = (speed + speed_prev) / 2
-            # ratio = speed / average
-            # puts("%s %s %s" % (speed, average, ratio))
-            # if ratio > 2:
-            #     return False
-        # if speed_prev > 0 and speed > speed_prev + 25:
-        #     return False
-        return True
 
     def read_serial(self):
         try:
+            # Parse line from serial
             line = str(self._serial.readline().decode()).strip()
-            puts("[Serial] %s" % line)
-            if self.log_file:
-                try:
-                    self.log_file.write("%s\n" % line)
-                except Exception:
-                    puts(colored.yellow("Log write failed"))
             player_id, speed = line.split('|')
             speed = float(speed)
-            if player_id == PLAYER_A and self.validate_speed(speed, self.previous_a):
-                self.previous_a = self.speed_a
-                self.speed_a = speed
-            elif player_id == PLAYER_B and self.validate_speed(speed, self.previous_b):
-                self.previous_b = self.speed_b
-                self.speed_b = speed
+
+            # Append parsed value to appropriate buffer
+            if player_id == PLAYER_A:
+                is_appended = self.buffer_a.append(speed)
+                log = "%s :: %s" % (line, self.buffer_a.avg())
+            elif player_id == PLAYER_B:
+                is_appended = self.buffer_b.append(speed)
+                log = "%s :: %s" % (line, self.buffer_b.avg())
             else:
+                puts(colored.red('No player ID: %s' % line))
+
+            # Log status to console
+            puts("[Serial] %s" % log)
+            if not is_appended:
                 puts(colored.red('Skipped line: %s' % line))
-                try:
-                    self.log_file.write("!!%s\n" % line)
-                except Exception:
-                    puts(colored.yellow("Log write failed"))
+
             self._last_read_time = time.time()
         except Exception as e:
             puts(colored.red("Error: %s" % e))
-            self.reset_speed()
+            # self.reset_speed()
 
     async def run_server(self, websocket, path):
         puts("Start websocket server on %s" % self.WEBSOCKET_PORT)
         interval = self.SERVER_PRECISION
         while True:
             await asyncio.sleep(interval)
+
+            # Reset state if there were no values for longer than VALID_DATA_TIMEOUT
             if time.time() - self._last_read_time > self.VALID_DATA_TIMEOUT:
                 self.reset_speed()
 
-            data = {
-                'speed_a': '%.3f' % (self.speed_a / 3.6),
-                'speed_b': '%.3f' % (self.speed_b / 3.6),
-                'interval': '%s' % interval
-            }
+            # Send data to websocket
+            data = {'speed_a': '%.3f' % (self.buffer_a.avg() / 3.6),
+                    'speed_b': '%.3f' % (self.buffer_b.avg() / 3.6),
+                    'interval': '%s' % interval}
             try:
                 await websocket.send(json.dumps(data))
             except websockets.ConnectionClosed:
                 puts("Connection closed")
                 break
 
+    def reset_speed(self):
+        self.buffer_a.clear()
+        self.buffer_b.clear()
+
     def stop(self):
         self._serial.close()
         self._loop.stop()
-        self.log_file.close()
 
 
 if __name__ == '__main__':
