@@ -14,7 +14,7 @@ class RaceHeader extends React.Component {
       <div className="race__header">
         <h1 className="title">
           <span className="race__header__player" style={styleA}>{playerOne}</span>
-          <span className="with-shadow"> vs. </span>
+          <span> vs. </span>
           <span className="race__header__player" style={styleB}>{playerTwo}</span>
         </h1>
         {showRaceTime ? (<h2 className="title with-shadow">{moment.utc(raceTime).format('mm:ss.SSS')}</h2>) : (null)}
