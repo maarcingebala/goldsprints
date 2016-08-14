@@ -72,8 +72,8 @@ class SerialDataReceiver(object):
             # puts("%s %s %s" % (speed, average, ratio))
             # if ratio > 2:
             #     return False
-        if speed_prev > 0 and speed > speed_prev + 25:
-            return False
+        # if speed_prev > 0 and speed > speed_prev + 25:
+        #     return False
         return True
 
     def read_serial(self):
