@@ -6,9 +6,10 @@ import { COLOR_A, COLOR_B } from '../actions/types';
 
 class RaceHeader extends React.Component {
   render() {
-    let { raceTime, playerOne, playerTwo, showRaceTime } = this.props;
-    let styleA = { color: COLOR_A }
-    let styleB = { color: COLOR_B }
+    const { playerOne, playerTwo, showRaceTime } = this.props;
+    const styleA = { color: COLOR_A }
+    const styleB = { color: COLOR_B }
+    let raceTime = this.props.raceTime;
     raceTime = raceTime ? raceTime * 1000 : 0;
     return (
       <div className="race__header">
@@ -17,7 +18,7 @@ class RaceHeader extends React.Component {
           <span> vs. </span>
           <span className="race__header__player" style={styleB}>{playerTwo}</span>
         </h1>
-        {showRaceTime ? (<h2 className="title with-shadow">{moment.utc(raceTime).format('mm:ss.SSS')}</h2>) : (null)}
+        {showRaceTime && (<h2 className="title with-shadow">{moment.utc(raceTime).format('mm:ss.SSS')}</h2>)}
       </div>
     )
   }

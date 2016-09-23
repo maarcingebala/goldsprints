@@ -20,7 +20,7 @@ const initialState = {
 };
 
 
-function game(state = initialState, action) {
+export default function game(state = initialState, action) {
   switch (action.type) {
     case T.INITIALIZE_RACE:
       return _.assign({}, state, {
@@ -86,5 +86,3 @@ function game(state = initialState, action) {
       return state;
   }
 }
-
-export default game;

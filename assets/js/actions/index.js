@@ -31,16 +31,13 @@ export function playerFinished(player, raceTime) {
 
 export function saveRaceResults() {
   return function (dispatch, getState) {
-    let state = getState();
+    const state = getState();
     return axios.post(state.saveRaceUrl, {
       player_a: state.finishedA,
       player_b: state.finishedB
     })
-    .then(function (response) {
-      console.log(response);
-    })
     .catch(function (error) {
-      console.log(error);
+      console.error(error);
     });
   }
 }

@@ -1,43 +1,40 @@
 export class WSHandler {
+
   constructor(onMessageCallback) {
-    let ws = new WebSocket("ws://localhost:8765/");
+    const ws = new WebSocket("ws://localhost:8765/");
 
-    ws.onmessage = function(event) {
-      var data = JSON.parse(event.data);
-      onMessageCallback(data);
+    ws.onmessage = (event) => {
+      onMessageCallback(JSON.parse(event.data));
     };
 
-    ws.onerror = function() {
+    ws.onerror = () => {
+      this.connected = false;
       console.log("Failed to establish WS connection");
-      this.connected = false;
     };
 
-    ws.onclose = function() {
+    ws.onopen = () => {
+      this.connected = true;
+      console.log("Connected to webscocket");
+    }
+
+    ws.onclose = () => {
+      this.connected = false;
       console.log("WS connection closed");
-      this.connected = false;
     };
-
-    this.connected = true;
-    this.ws = ws;
   }
+
 }
 
-export function parseWsData(props, data) {
-  let speedA = parseFloat(data.speed_a);
-  let speedB = parseFloat(data.speed_b);
-  let interval = parseFloat(data.interval);
-  let newPositionA = props.positionA + speedA * interval;
-  let newPositionB = props.positionB + speedB * interval;
+export function parseWsData(wsData, oldPositionA, oldPositionB, oldRaceTime) {
+  const speedA = parseFloat(wsData.speed_a);
+  const speedB = parseFloat(wsData.speed_b);
+  const interval = parseFloat(wsData.interval);
+  let newPositionA = oldPositionA + speedA * interval;
+  let newPositionB = oldPositionB + speedB * interval;
 
   newPositionA = Math.round(newPositionA * 1000) / 1000;
   newPositionB = Math.round(newPositionB * 1000) / 1000;
-  let raceTime = props.raceTime + interval;
+  const raceTime = oldRaceTime + interval;
 
-  return {
-    speedA: speedA,
-    speedB: speedB,
-    newPositionA: newPositionA,
-    newPositionB: newPositionB,
-    raceTime: raceTime
-  }
+  return { speedA, speedB, newPositionA, newPositionB, raceTime }
 }

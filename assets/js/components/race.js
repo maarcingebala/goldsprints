@@ -15,15 +15,12 @@ import { WSHandler, parseWsData } from './../wshandler';
 
 class Race extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   onWebsocketMessage(data) {
-    if (this.props.raceIsActive) {
-      let parsedData = parseWsData(this.props, data);
-      let finishedA = this.checkPlayerFinished(PLAYER_A, parsedData.newPositionA, parsedData.raceTime);
-      let finishedB = this.checkPlayerFinished(PLAYER_B, parsedData.newPositionB, parsedData.raceTime);
+    const { raceIsActive, positionA, positionB, raceTime } = this.props;
+    if (raceIsActive) {
+      const parsedData = parseWsData(data, positionA, positionB, raceTime);
+      const finishedA = this.checkPlayerFinished(PLAYER_A, parsedData.newPositionA, parsedData.raceTime);
+      const finishedB = this.checkPlayerFinished(PLAYER_B, parsedData.newPositionB, parsedData.raceTime);
 
       if (finishedA && finishedB) {
         console.log(`Race ended in ${parsedData.raceTime} s`);
@@ -41,11 +38,11 @@ class Race extends React.Component {
   }
 
   checkPlayerFinished(player, position, raceTime) {
-    if ((player == PLAYER_A && this.props.finishedA > 0) ||
-        (player == PLAYER_B && this.props.finishedB > 0)) {
+    const { finishedA, finishedB, distance } = this.props;
+    if ((player == PLAYER_A && finishedA > 0) || (player == PLAYER_B && finishedB > 0)) {
       return true;
     }
-    if (position >= this.props.distance) {
+    if (position >= distance) {
       console.log(`Player ${player} ended in ${raceTime} s`);
       this.props.onPlayerFinished(player, raceTime);
       return true;
@@ -79,44 +76,54 @@ class Race extends React.Component {
   }
 
   componentWillMount() {
-    this.wsHandler = new WSHandler((data) => {this.onWebsocketMessage(data)});
+    this.wsHandler = new WSHandler(data => this.onWebsocketMessage(data));
   }
 
   render() {
-    const { prevRaceUrl, nextRaceUrl, finishedA, finishedB } = this.props;
+    const {
+      distance,
+      raceTime,
+      finishedA, finishedB,
+      playerOne, playerTwo,
+      positionA, positionB,
+      prevRaceUrl, nextRaceUrl,
+      speedA, speedB
+    } = this.props;
+
     const canShowWinner = finishedA && finishedB;
+
     return (
       <div className="">
         <div className="row">
           <RaceHeader
             showRaceTime={true}
-            raceTime={this.props.raceTime}
-            playerOne={this.props.playerOne}
-            playerTwo={this.props.playerTwo} />
+            raceTime={raceTime}
+            playerOne={playerOne}
+            playerTwo={playerTwo} />
           {canShowWinner ? (<Winner winner={this.getWinner()} />) : (null)}
           <Countdown
             onCountdownOver={() => this.onCountdownOver()}
             ref="countdownComponent" />
           <RaceCanvas
-            positionA={this.props.positionA}
-            positionB={this.props.positionB}
-            distance={this.props.distance} />
+            positionA={positionA}
+            positionB={positionB}
+            distance={distance} />
         </div>
         <div className="row">
           <div className="col-xs-12">
             <PlayerStats
               className="pull-left"
-              player={this.props.playerOne}
-              position={this.props.positionA}
-              speed={this.props.speedA}
-              raceTime={this.props.finishedA}
+              player={playerOne}
+              position={positionA}
+              speed={speedA}
+              raceTime={finishedA}
               color={COLOR_A} />
             <PlayerStats
               className="pull-right"
-              player={this.props.playerTwo}
-              position={this.props.positionB}
-              speed={this.props.speedB}
-              raceTime={this.props.finishedB}
+              player={playerTwo}
+              position={positionB}
+              speed={speedB}
+              raceTime={finishedB}
               color={COLOR_B} />
           </div>
         </div>

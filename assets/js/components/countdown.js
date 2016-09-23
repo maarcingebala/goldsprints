@@ -7,10 +7,6 @@ const SOUND_HIGH = require('file!../../sounds/countdown_high.mp3');
 
 class Countdown extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   start() {
     this.setState({counter: COUNTDOWN_FROM, active: true});
     this.lowTickSound.play();

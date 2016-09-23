@@ -5,8 +5,7 @@ const { Component, PropTypes } = React;
 export default class Winner extends Component {
     render() {
         const { winner } = this.props;
-        console.log(winner);
-        let style = winner ? {color: winner.color} : {};
+        const style = winner ? {color: winner.color} : {};
         return (
             <div className="winner">
                 {winner ? 
