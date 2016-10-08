@@ -5,6 +5,11 @@ import { COLOR_A, COLOR_B } from '../actions/types';
 
 
 class RaceHeader extends React.Component {
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.raceTime !== this.props.raceTime;
+  }
+
   render() {
     const { playerOne, playerTwo, showRaceTime } = this.props;
     const styleA = { color: COLOR_A }

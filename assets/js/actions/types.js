@@ -14,3 +14,4 @@ export const STOP_RACE = 'STOP_RACE';
 export const RESET_RACE = 'RESET_RACE';
 export const UPDATE_POSITION = 'UPDATE_POSITION';
 export const PLAYER_FINISHED = 'PLAYER_FINISHED';
+export const UPDATE_TIME = 'UPDATE_TIME';

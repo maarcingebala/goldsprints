@@ -25,16 +25,13 @@ export class WSHandler {
 
 }
 
-export function parseWsData(wsData, oldPositionA, oldPositionB, oldRaceTime) {
+
+export function parseWsData(wsData) {
+  // todo: probably map() or something similar would help here 
   const speedA = parseFloat(wsData.speed_a);
   const speedB = parseFloat(wsData.speed_b);
   const interval = parseFloat(wsData.interval);
-  let newPositionA = oldPositionA + speedA * interval;
-  let newPositionB = oldPositionB + speedB * interval;
-
-  newPositionA = Math.round(newPositionA * 1000) / 1000;
-  newPositionB = Math.round(newPositionB * 1000) / 1000;
-  const raceTime = oldRaceTime + interval;
-
-  return { speedA, speedB, newPositionA, newPositionB, raceTime }
+  const deltaA = parseFloat(wsData.delta_a);
+  const deltaB = parseFloat(wsData.delta_b);
+  return { speedA, speedB, deltaA, deltaB }
 }

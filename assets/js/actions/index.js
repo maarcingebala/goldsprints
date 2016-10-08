@@ -21,12 +21,16 @@ export function resetRace() {
   return {type: T.RESET_RACE}
 }
 
-export function updatePosition(player, position, speed, raceTime) {
-  return {type: T.UPDATE_POSITION, player, position, speed, raceTime}
+export function updatePosition(player, position, speed) {
+  return {type: T.UPDATE_POSITION, player, position, speed}
 }
 
 export function playerFinished(player, raceTime) {
   return {type: T.PLAYER_FINISHED, player, raceTime}
+}
+
+export function updateTime(time) {
+  return { type: T.UPDATE_TIME, raceTime: time }
 }
 
 export function saveRaceResults() {

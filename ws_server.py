@@ -18,7 +18,7 @@ WRITE_LOGFILE = False;
 
 class Buffer(object):
     # Buffer size
-    SIZE = 5
+    SIZE = 3
 
     # Maxiumum number of values to skip. If skipped MAX_SKIP values in row,
     # assume that the value is correct and allow it.
@@ -35,12 +35,14 @@ class Buffer(object):
 
         # Check too high values
         avg = self.avg()
+        if value > 100:
+            return False
         if avg > 0 and self.skipped_count < self.MAX_SKIP:
             # under 20km/h check for values two times higher
-            if value < 20 and value > avg * 2:
-                self.skipped_count += 1
-                return False
-            elif value > 20 and value > avg * 1.5:
+            # if value < 20 and value > avg * 3:
+            #     self.skipped_count += 1
+            #     return False
+            if value > 20 and value > avg * 1.5:
                 self.skipped_count += 1
                 return False
 
@@ -64,7 +66,7 @@ class Buffer(object):
 class SerialDataReceiver(object):
     BAUDRATE = 9600
     SERIAL_TIMEOUT = 0.1
-    SERVER_PRECISION = 0.005
+    SERVER_PRECISION = 0.015
     VALID_DATA_TIMEOUT = 0.5
     WEBSOCKET_PORT = 8765
 
@@ -131,10 +133,18 @@ class SerialDataReceiver(object):
             if time.time() - self._last_read_time > self.VALID_DATA_TIMEOUT:
                 self.reset_speed()
 
+            speed_a = self.buffer_a.avg() / 3.6
+            speed_b = self.buffer_b.avg() / 3.6
+            delta_a = speed_a * interval
+            delta_b = speed_b * interval
+
             # Send data to websocket
-            data = {'speed_a': '%.3f' % (self.buffer_a.avg() / 3.6),
-                    'speed_b': '%.3f' % (self.buffer_b.avg() / 3.6),
-                    'interval': '%s' % interval}
+            data = {
+                'delta_a': '%.3f' % delta_a,
+                'delta_b': '%.3f' % delta_b,
+                'speed_a': '%.3f' % (speed_a),
+                'speed_b': '%.3f' % (speed_b),
+                'interval': '%s' % interval}
             try:
                 await websocket.send(json.dumps(data))
             except websockets.ConnectionClosed:

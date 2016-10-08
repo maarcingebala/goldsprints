@@ -2,37 +2,47 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 
-import {startRace, updatePosition, stopRace, playerFinished, saveRaceResults,
-  resetRace} from '../actions';
-import {PLAYER_A, PLAYER_B, COLOR_A, COLOR_B} from '../actions/types';
+import { WSHandler, parseWsData } from './../wshandler';
+import { startRace, updatePosition, stopRace, playerFinished, saveRaceResults, resetRace, updateTime } from '../actions';
+import { PLAYER_A, PLAYER_B, COLOR_A, COLOR_B } from '../actions/types';
+import Timer from '../timer';
 import Countdown from './countdown';
 import RaceCanvas from './canvas';
 import RaceHeader from './header';
 import PlayerStats from './playerStats';
 import Winner from './winner';
-import { WSHandler, parseWsData } from './../wshandler';
 
 
 class Race extends React.Component {
 
+  componentWillMount() {
+    this.wsHandler = new WSHandler(data => this.onWebsocketMessage(data));
+    this.timer = new Timer();
+  }
+
   onWebsocketMessage(data) {
-    const { raceIsActive, positionA, positionB, raceTime } = this.props;
+    const { raceIsActive, positionA, positionB } = this.props;
     if (raceIsActive) {
-      const parsedData = parseWsData(data, positionA, positionB, raceTime);
-      const finishedA = this.checkPlayerFinished(PLAYER_A, parsedData.newPositionA, parsedData.raceTime);
-      const finishedB = this.checkPlayerFinished(PLAYER_B, parsedData.newPositionB, parsedData.raceTime);
+      const { deltaA, deltaB, speedA, speedB } = parseWsData(data);
+
+      const newPositionA = positionA + deltaA;
+      const newPositionB = positionB + deltaB;
+      const raceTime = this.timer.getTime();
+
+      const finishedA = this.checkPlayerFinished(PLAYER_A, newPositionA, raceTime);
+      const finishedB = this.checkPlayerFinished(PLAYER_B, newPositionB, raceTime);
 
       if (finishedA && finishedB) {
-        console.log(`Race ended in ${parsedData.raceTime} s`);
-        this.props.onStopRace();
+        this.props.dispatchStopRace();
       } else {
-        // TODO: Race time should be updated in separate action.
+        // separate action for updating position and time, now time is updated twice
         if (!finishedA) {
-          this.props.onUpdatePosition(PLAYER_A, parsedData.newPositionA, parsedData.speedA, parsedData.raceTime);
+          this.props.dispatchUpdatePosition(PLAYER_A, newPositionA, speedA);
         }
         if (!finishedB) {
-          this.props.onUpdatePosition(PLAYER_B, parsedData.newPositionB, parsedData.speedB, parsedData.raceTime);
+          this.props.dispatchUpdatePosition(PLAYER_B, newPositionB, speedB);
         }
+        this.props.dispatchUpdateTime(raceTime);
       }
     }
   }
@@ -44,10 +54,16 @@ class Race extends React.Component {
     }
     if (position >= distance) {
       console.log(`Player ${player} ended in ${raceTime} s`);
-      this.props.onPlayerFinished(player, raceTime);
+      this.props.dispatchPlayerFinished(player, raceTime);
       return true;
     }
     return false;
+  }
+
+  startRace() {
+    this.timer.start();
+    this.props.dispatchStart();
+    // this.startCountdown();
   }
 
   startCountdown() {
@@ -57,7 +73,8 @@ class Race extends React.Component {
   }
 
   resetRace() {
-    this.props.onResetRace();
+    this.timer.reset();
+    this.props.dispatchResetRace();
   }
 
   getWinner() {
@@ -73,10 +90,6 @@ class Race extends React.Component {
 
   onCountdownOver() {
     this.props.onStart();
-  }
-
-  componentWillMount() {
-    this.wsHandler = new WSHandler(data => this.onWebsocketMessage(data));
   }
 
   render() {
@@ -130,7 +143,7 @@ class Race extends React.Component {
         <div className="row">
           <div className="col-xs-12 game-menu">
             {prevRaceUrl ? (<a className="btn btn-link with-shadow pull-left" href={prevRaceUrl}>Previous</a>) : (null)}
-            <button className="btn btn-link with-shadow" onClick={() => this.startCountdown()}>Start</button>
+            <button className="btn btn-link with-shadow" onClick={() => this.startRace()}>Start</button>
             <button className="btn btn-link with-shadow" onClick={() => this.resetRace()}>Reset</button>
             {nextRaceUrl ? (<a className="btn btn-link with-shadow pull-right" href={nextRaceUrl}>Next</a>) : (null)}
           </div>
@@ -140,26 +153,27 @@ class Race extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return state
-};
+const mapStateToProps = (state) => state;
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    onStart: () => {
+    dispatchStart: () => {
       dispatch(startRace())
     },
-    onUpdatePosition: (player, position, speed, raceTime) => {
-      dispatch(updatePosition(player, position, speed, raceTime))
+    dispatchUpdatePosition: (player, position, speed) => {
+      dispatch(updatePosition(player, position, speed))
     },
-    onStopRace: () => {
+    dispatchUpdateTime: (time) => {
+      dispatch(updateTime(time));
+    },
+    dispatchStopRace: () => {
       dispatch(stopRace());
       dispatch(saveRaceResults())
     },
-    onPlayerFinished: (player, raceTime) => {
+    dispatchPlayerFinished: (player, raceTime) => {
       dispatch(playerFinished(player, raceTime))
     },
-    onResetRace: () => {
+    dispatchResetRace: () => {
       dispatch(resetRace())
     }
   };
