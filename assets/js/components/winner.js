@@ -4,13 +4,22 @@ const { Component, PropTypes } = React;
 
 export default class Winner extends Component {
     render() {
-        const { winner } = this.props;
-        const style = winner ? {color: winner.color} : {};
+        const { winner: { name, color, time } } = this.props;
+        const style = color ? {color: color} : {};
         return (
             <div className="winner">
-                {winner ? 
-                    (<div><p>Wygrał</p><h1 style={style}>{ winner.name }</h1></div>) : 
-                    (<div><h1>Remis</h1></div>)}
+                {name ? (
+                    <div>
+                        <p>Wygrał</p>
+                        <h1 style={style}>{name}</h1>
+                        <h2>{time}</h2>
+                    </div>
+                ) :  (
+                    <div>
+                        <h1>Remis</h1>
+                        <h2>{time}</h2>
+                    </div>
+                )}
             </div>
         );
     }

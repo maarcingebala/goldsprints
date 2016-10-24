@@ -79,9 +79,7 @@ class RaceCanvas extends React.Component {
   }
 
   render() {
-    return (
-      <canvas id="gameCanvas" width="500" height="500" ref="canvas" />
-    )
+    return <canvas id="gameCanvas" width="500" height="500" ref="canvas" />;
   }
 }
 

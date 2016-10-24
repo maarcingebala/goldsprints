@@ -59,21 +59,17 @@ export default function game(state = initialState, action) {
         raceIsActive: false
       });
     case T.UPDATE_TIME:
-      return _.assign({}, state, {
-        raceTime: action.raceTime
-      });
+      return _.assign({}, state, { raceTime: action.raceTime });
     case T.UPDATE_POSITION:
       if (action.player == T.PLAYER_A) {
         return _.assign({}, state, {
           positionA: action.position,
-          speedA: action.speed,
-          raceTime: action.raceTime
+          speedA: action.speed
         });
       } else if (action.player == T.PLAYER_B) {
         return _.assign({}, state, {
           positionB: action.position,
-          speedB: action.speed,
-          raceTime: action.raceTime
+          speedB: action.speed
         });
       }
     case T.PLAYER_FINISHED:

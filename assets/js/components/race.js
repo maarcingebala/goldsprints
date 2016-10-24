@@ -22,27 +22,33 @@ class Race extends React.Component {
 
   onWebsocketMessage(data) {
     const { raceIsActive, positionA, positionB } = this.props;
+
     if (raceIsActive) {
       const { deltaA, deltaB, speedA, speedB } = parseWsData(data);
 
+      // calculate current race time and players' positions
+      const raceTime = this.timer.getTime();
       const newPositionA = positionA + deltaA;
       const newPositionB = positionB + deltaB;
-      const raceTime = this.timer.getTime();
 
+      // check if any player has finished the race
       const finishedA = this.checkPlayerFinished(PLAYER_A, newPositionA, raceTime);
       const finishedB = this.checkPlayerFinished(PLAYER_B, newPositionB, raceTime);
 
+      // update time
+      this.props.dispatchUpdateTime(raceTime);
+
+      // update players' positions 
+      if (!finishedA) {
+        this.props.dispatchUpdatePosition(PLAYER_A, newPositionA, speedA);
+      }
+      if (!finishedB) {
+        this.props.dispatchUpdatePosition(PLAYER_B, newPositionB, speedB);
+      }
+
+      // stop the race if both players finished
       if (finishedA && finishedB) {
         this.props.dispatchStopRace();
-      } else {
-        // separate action for updating position and time, now time is updated twice
-        if (!finishedA) {
-          this.props.dispatchUpdatePosition(PLAYER_A, newPositionA, speedA);
-        }
-        if (!finishedB) {
-          this.props.dispatchUpdatePosition(PLAYER_B, newPositionB, speedB);
-        }
-        this.props.dispatchUpdateTime(raceTime);
       }
     }
   }
@@ -80,11 +86,11 @@ class Race extends React.Component {
   getWinner() {
     const { finishedA, finishedB, playerOne, playerTwo } = this.props;
     if (finishedA < finishedB) {
-      return { name: playerOne, color: COLOR_A };
+      return { name: playerOne, color: COLOR_A, time: finishedA };
     } else if (finishedA > finishedB) {
-      return { name: playerTwo, color: COLOR_B };
+      return { name: playerTwo, color: COLOR_B, time: finishedB };
     } else {
-      return null;
+      return { name: null, time: finishedA, color: null };
     }
   }
 
@@ -93,59 +99,28 @@ class Race extends React.Component {
   }
 
   render() {
-    const {
-      distance,
-      raceTime,
-      finishedA, finishedB,
-      playerOne, playerTwo,
-      positionA, positionB,
-      prevRaceUrl, nextRaceUrl,
-      speedA, speedB
-    } = this.props;
-
-    const canShowWinner = finishedA && finishedB;
-
+    const { distance, raceTime, finishedA, finishedB, playerOne, playerTwo, positionA, positionB, prevRaceUrl, nextRaceUrl, speedA, speedB } = this.props;
+    const raceFinished = finishedA && finishedB;
     return (
-      <div className="">
+      <div>
         <div className="row">
           <RaceHeader
             showRaceTime={true}
             raceTime={raceTime}
             playerOne={playerOne}
             playerTwo={playerTwo} />
-          {canShowWinner ? (<Winner winner={this.getWinner()} />) : (null)}
-          <Countdown
-            onCountdownOver={() => this.onCountdownOver()}
-            ref="countdownComponent" />
-          <RaceCanvas
-            positionA={positionA}
-            positionB={positionB}
-            distance={distance} />
-        </div>
-        <div className="row">
-          <div className="col-xs-12">
-            <PlayerStats
-              className="pull-left"
-              player={playerOne}
-              position={positionA}
-              speed={speedA}
-              raceTime={finishedA}
-              color={COLOR_A} />
-            <PlayerStats
-              className="pull-right"
-              player={playerTwo}
-              position={positionB}
-              speed={speedB}
-              raceTime={finishedB}
-              color={COLOR_B} />
-          </div>
+          
+          {raceFinished ? (<Winner winner={this.getWinner()} />) : (null)}
+          
+          <Countdown onCountdownOver={() => this.onCountdownOver()} ref="countdownComponent" />
+          <RaceCanvas positionA={positionA} positionB={positionB} distance={distance} />
         </div>
         <div className="row">
           <div className="col-xs-12 game-menu">
-            {prevRaceUrl ? (<a className="btn btn-link with-shadow pull-left" href={prevRaceUrl}>Previous</a>) : (null)}
+            {prevRaceUrl && (<a className="btn btn-link with-shadow pull-left" href={prevRaceUrl}>Previous</a>)}
             <button className="btn btn-link with-shadow" onClick={() => this.startRace()}>Start</button>
             <button className="btn btn-link with-shadow" onClick={() => this.resetRace()}>Reset</button>
-            {nextRaceUrl ? (<a className="btn btn-link with-shadow pull-right" href={nextRaceUrl}>Next</a>) : (null)}
+            {nextRaceUrl && (<a className="btn btn-link with-shadow pull-right" href={nextRaceUrl}>Next</a>)}
           </div>
         </div>
       </div>
