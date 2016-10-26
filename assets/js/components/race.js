@@ -67,9 +67,7 @@ class Race extends React.Component {
   }
 
   startRace() {
-    this.timer.start();
-    this.props.dispatchStart();
-    // this.startCountdown();
+    this.startCountdown();
   }
 
   startCountdown() {
@@ -95,7 +93,8 @@ class Race extends React.Component {
   }
 
   onCountdownOver() {
-    this.props.onStart();
+    this.props.dispatchStart();
+    this.timer.start();
   }
 
   render() {
