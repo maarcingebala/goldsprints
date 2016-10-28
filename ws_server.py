@@ -133,8 +133,8 @@ class SerialDataReceiver(object):
             if time.time() - self._last_read_time > self.VALID_DATA_TIMEOUT:
                 self.reset_speed()
 
-            speed_a = self.buffer_a.avg() / 3.6
-            speed_b = self.buffer_b.avg() / 3.6
+            speed_a = self.buffer_a.avg()
+            speed_b = self.buffer_b.avg()
             delta_a = speed_a * interval
             delta_b = speed_b * interval
 
