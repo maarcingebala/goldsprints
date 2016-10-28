@@ -1,5 +1,5 @@
 // constants
-double circuitWheel = 2.13;
+double wheelPerimeter = 2.13;
 double msToKmh = 3.6;
 double rollerToBicycleWheel = 6.196364;
 
@@ -10,11 +10,14 @@ double rpmRollerB;
 double rpmBicycleB;
 double speedA;
 double speedB;
-double lastmillisFirst;
-double lastmillisSecond;
+double lastmillisA;
+double lastmillisB;
 
 volatile int counterA = 0;  // revolutions counter for bike A
 volatile int counterB = 0;  // revolutions counter for bike B
+
+double countSignalsA = 0;
+double countSignalsB = 0;
 
 
 // pins
@@ -43,33 +46,42 @@ void setup() {
 
 void loop() {
   if (counterA >= 1 ) {
-    rpmRollerA = (counterA / ((millis() - lastmillisFirst) * 0.001));
-    rpmBicycleA = rpmRollerA / rollerToBicycleWheel;
-    speedA = rpmBicycleA * circuitWheel * msToKmh ;
-
-    lastmillisFirst = millis();
-    Serial.print("a|");
-    Serial.println(speedA);
+    speedA = calcSpeed(counterA, lastmillisA);
+    printLine('a', speedA);
+    lastmillisA = millis();
     counterA = 0;
   }
 
   if (counterB >= 1 ) {
-    rpmRollerB = (counterB / ((millis() - lastmillisSecond) * 0.001));
-    rpmBicycleB = rpmRollerB / rollerToBicycleWheel;
-    speedB = rpmBicycleB * circuitWheel * msToKmh;
-
-    lastmillisSecond = millis();
-    Serial.print("b|");
-    Serial.println(speedB);
+    speedB = calcSpeed(counterB, lastmillisB);
+    printLine('b', speedB);
+    lastmillisB = millis();
     counterB = 0;
   }
 }
 
 
+double calcSpeed(int signalsCounter, double lastMillis) {
+  double rollerRev = (signalsCounter / ((millis() - lastMillis) * 0.001));
+  double wheelRev = rollerRev / rollerToBicycleWheel;
+  double speed = wheelRev * wheelPerimeter;
+  return speed;
+}
+
+
+void printLine(char id, double speed) {
+  Serial.print(id);
+  Serial.print("|");
+  Serial.println(speed);
+}
+
+
 void onSignalA() {
   counterA++;
+  // countSignalsA++;
 }
 
 void onSignalB() {
   counterB++;
+  // countSignalsB++;
 }
