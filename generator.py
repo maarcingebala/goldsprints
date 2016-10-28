@@ -6,6 +6,8 @@ from threading import Thread
 import serial
 from clint.textui import puts, colored
 
+RANDOMIZE = False
+
 color_f = {
     'a': colored.red,
     'b': colored.blue
@@ -40,7 +42,7 @@ class RandomGenerator(object):
         while True:
             v = temp_changed_v
             if self.randomize:
-                if random.random() > 1:
+                if random.random() > 0.99:
                     # simulate random invalid values
                     v += 100
                 elif random.random() > 0.85:
@@ -84,17 +86,16 @@ if __name__ == '__main__':
         sys.exit(0)
 
     # Random generator
-    randomize = False
     try:
-        speed_1 = int(sys.argv[2])
+        speed_1 = float(sys.argv[2])
     except IndexError:
     	speed_1 = 0
     try:
-        speed_2 = int(sys.argv[3])
+        speed_2 = float(sys.argv[3])
     except IndexError:
         speed_2 = 0
-    gen_a = RandomGenerator(port, 'a', speed_1, randomize)
-    gen_b = RandomGenerator(port, 'b', speed_2, randomize)
+    gen_a = RandomGenerator(port, 'a', speed_1, RANDOMIZE)
+    gen_b = RandomGenerator(port, 'b', speed_2, RANDOMIZE)
     if speed_1 > 0:
         gen_a.start()
     if speed_2 > 0:
