@@ -10,12 +10,12 @@ class RaceCanvas extends React.Component {
 
     context.arc(0, 0, this.radius, 0, 2 * Math.PI);
     context.lineWidth = 10;
-    context.fillStyle = 'white';
+    context.fillStyle = '#262626';
     context.fill();
 
     context.beginPath();
     context.arc(0, 0, this.radius * 0.1, 0, 2 * Math.PI);
-    context.fillStyle = '#333';
+    context.fillStyle = '#f2f2f2';
     context.fill();
   }
 
