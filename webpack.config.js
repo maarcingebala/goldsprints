@@ -12,23 +12,21 @@ configuration = {
   contex: __dirname,
   devtool: 'source-map',
   entry: [
-    'webpack-dev-server/client?http://localhost:3000',
-    'webpack/hot/only-dev-server',
     './assets/js/main',
   ],
 
   output: {
     path: path.resolve('./assets/bundles/'),
     filename: '[name].js',
-    publicPath: 'http://localhost:3000/assets/bundles/'
+    publicPath: ''
   },
 
   module: {
     loaders: [
-      {test: /\.js$/, exclude: /node_modules/, loaders: ['react-hot', 'babel']},
+      {test: /\.js$/, exclude: /node_modules/, loaders: ['babel']},
       {test: /\.scss$/, loader: ExtractTextPlugin.extract(['css?sourceMap', 'sass'])},
       {test: /\.woff$/, loader: "file?name=[name].[ext]"},
-      // {test: /\.mp3$/, loader: "file?name=[name].[ext]"},
+      {test: /\.(png|jpg)$/, loader: 'url-loader'},
       {
         test: /\.(eot|otf|png|svg|ttf|woff|woff2)(\?v=[0-9.]+)?$/,
         loader: 'file?name=[name].[hash].[ext]',
@@ -41,8 +39,6 @@ configuration = {
 
   plugins: [
     new BundleTracker({filename: './webpack-stats.json'}),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
     extractTextPlugin
   ],
 
