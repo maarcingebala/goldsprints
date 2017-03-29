@@ -59,8 +59,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'goldsprint.wsgi.application'
 
 
-DATABASE_URL = 'postgres://goldsprint:goldsprint@127.0.0.1:5432/goldsprint'
-DATABASES = {'default': dj_database_url.parse(DATABASE_URL)}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'goldsprint-db',
+    }
+}
 
 
 AUTH_PASSWORD_VALIDATORS = [
