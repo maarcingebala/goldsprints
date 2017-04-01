@@ -3,22 +3,17 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var path = require('path');
 var webpack = require('webpack');
 
-var extractTextPlugin = new ExtractTextPlugin(
-  '[name].css'
-);
-
+var resolve = path.resolve.bind(path, __dirname);
 
 configuration = {
   contex: __dirname,
   devtool: 'source-map',
-  entry: [
-    './assets/js/main',
-  ],
+  entry: './assets/js/main',
 
   output: {
-    path: path.resolve('./assets/bundles/'),
+    path: resolve('assets/bundles/'),
     filename: '[name].js',
-    publicPath: ''
+    publicPath: '/static/bundles/'
   },
 
   module: {
@@ -26,12 +21,13 @@ configuration = {
       {test: /\.js$/, exclude: /node_modules/, loaders: ['babel']},
       {test: /\.scss$/, loader: ExtractTextPlugin.extract(['css?sourceMap', 'sass'])},
       {test: /\.woff$/, loader: "file?name=[name].[ext]"},
+      {test: /\.mp3$/, loader: 'file?name=[name].[ext]'},
       {test: /\.(png|jpg)$/, loader: 'url-loader'},
       {
         test: /\.(eot|otf|png|svg|ttf|woff|woff2)(\?v=[0-9.]+)?$/,
         loader: 'file?name=[name].[hash].[ext]',
         include: [
-          path.resolve(__dirname, 'node_modules')
+          resolve('node_modules')
         ]
       }
     ]
@@ -39,20 +35,11 @@ configuration = {
 
   plugins: [
     new BundleTracker({filename: './webpack-stats.json'}),
-    extractTextPlugin
+    new ExtractTextPlugin('[name].css')
   ],
 
   sassLoader: {
     sourceMap: true
-  },
-
-  devServer: {
-    proxy: {
-      '/': {
-        target: 'http://localhost:8000',
-        secure: false
-      }
-    }
   }
 };
 

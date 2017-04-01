@@ -1,9 +1,9 @@
 import React from 'react';
 
-const COUNTDOWN_FROM = 5;
+import soundHigh from '../../sounds/countdown_high.mp3';
+import soundLow from '../../sounds/countdown_low.mp3';
 
-const SOUND_LOW = require('file!../../sounds/countdown_low.mp3');
-const SOUND_HIGH = require('file!../../sounds/countdown_high.mp3');
+const COUNTDOWN_FROM = 5;
 
 class Countdown extends React.Component {
 
@@ -32,8 +32,8 @@ class Countdown extends React.Component {
   componentWillMount() {
     this.state = { counter: 0, active: false }
     this.tick = this.tick.bind(this);
-    this.lowTickSound = new Audio(SOUND_LOW);
-    this.highTickSound = new Audio(SOUND_HIGH);
+    this.lowTickSound = new Audio(soundLow);
+    this.highTickSound = new Audio(soundHigh);
   }
 
   render() {
