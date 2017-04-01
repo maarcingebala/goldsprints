@@ -62,7 +62,7 @@ WSGI_APPLICATION = 'goldsprint.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'goldsprint-db',
+        'NAME': 'db.sqlite',
     }
 }
 

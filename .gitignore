@@ -87,3 +87,4 @@ dist/
 webpack-stats.json
 
 .vscode
+db.sqlite
