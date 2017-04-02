@@ -1,6 +1,6 @@
 # Goldsprints
 
-An attemp to build an application for [Goldsprint competition](https://en.wikipedia.org/wiki/Goldsprint) with Arduino, Python and React.
+An attempt to build an application for [Goldsprint competition](https://en.wikipedia.org/wiki/Goldsprint) with Arduino, Python and React.
 
 ![goldsprints](https://cloud.githubusercontent.com/assets/5421321/24585852/423c5fec-1794-11e7-9653-43f4c8cdb2df.png)
 
@@ -8,7 +8,7 @@ An attemp to build an application for [Goldsprint competition](https://en.wikipe
 1. We use Arduino with two Hall sensors to measure the speed of the bike rollers.
 2. Measurements are sent to a Python script that parses them and sends them through WebSocket to the browser.
 3. We use Django as a backend for storing data about races and players.
-4. Dynamic pages that display speed and distances of players during a race are written in React.
+4. Dynamic pages that display speed and distances of players during a race are rendered in React.
 
 ## Quickstart
 1. Build static assets: `npm install` & `npm run build`
