@@ -1,8 +1,8 @@
 {
   "name": "goldsprint",
   "version": "0.0.1",
-  "author": "SMPOL Software",
-  "license": "",
+  "author": "Marcin Gębala",
+  "license": "MIT",
   "engines": {
     "node": "6.3.0"
   },
