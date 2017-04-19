@@ -88,4 +88,3 @@ webpack-stats.json
 
 .vscode
 db.sqlite
-assets/bundles
