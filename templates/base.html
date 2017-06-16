@@ -1,23 +1,23 @@
-{% load render_bundle from webpack_loader %}
+{% load staticfiles %}
 
 <!doctype html>
 <html class="no-js" lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{% block title %}Goldsprint{% endblock %}</title>
-  {% render_bundle 'main' 'css' %}
-</head>
-<body>
-  <div class="content-wrapper">
-    <div class="top-menu">
-      <a href="{% url 'game:menu' %}">menu</a>
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{% block title %}Goldsprint{% endblock %}</title>
+    <link rel="stylesheet" href="{% static "bundles/main.css" %}">
+  </head>
+  <body>
+    <div class="content-wrapper">
+      <div class="top-menu">
+        <a href="{% url 'game:menu' %}">menu</a>
+      </div>
+      <div class="container game-wrapper">
+        {% block content %}{% endblock %}
+      </div>
     </div>
-    <div class="container game-wrapper">
-      {% block content %}{% endblock %}
-    </div>
-  </div>
-  {% render_bundle 'main' 'js' %}
-</body>
+    <script src="{% static "bundles/main.js" %}"></script>
+  </body>
 </html>

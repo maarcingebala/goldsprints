@@ -25,7 +25,7 @@ configuration = {
       {test: /\.(png|jpg)$/, loader: 'url-loader'},
       {
         test: /\.(eot|otf|png|svg|ttf|woff|woff2)(\?v=[0-9.]+)?$/,
-        loader: 'file?name=[name].[hash].[ext]',
+        loader: 'file?name=[name].[ext]',
         include: [
           resolve('node_modules')
         ]
