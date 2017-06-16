@@ -64,20 +64,13 @@ target/
 !.coveragerc
 !.gitignore
 !.travis*
-*.css
-*.css.map
-*.js.map
 *.log
 *.pot
 *.pyc
 dev.sqlite
 build/
-dist/
 *\.egg*
 #data
-/media/
-/static/
-/goldsprint/static/dist/
 /node_modules/
 .idea/*
 
