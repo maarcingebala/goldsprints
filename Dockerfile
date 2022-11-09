@@ -15,7 +15,6 @@ RUN   npm install && \
      npm run build
 
 FROM build as gs
-COPY --from=build /src .
 RUN   pip3 install -r requirements.txt
 RUN python3 manage.py migrate
 EXPOSE 8000 
