@@ -1,0 +1,14 @@
+version: '3'
+services:
+  gs:
+    image: gs:latest
+    build: .
+    hostname: gs1   
+    network_mode: "host"
+    restart: unless-stopped
+    expose:
+      - "8000"
+    privileged: true
+    devices:
+      - /dev/ttyACM0:/dev/ttyACM0
+      - /dev/ttyUSB0:/dev/ttyUSB0
