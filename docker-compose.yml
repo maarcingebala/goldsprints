@@ -3,7 +3,7 @@ services:
   gs:
     image: gs:latest
     build: .
-    hostname: gs1   
+    hostname: goldsprints   
     network_mode: "host"
     restart: unless-stopped
     expose:

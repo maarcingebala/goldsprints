@@ -1,10 +1,10 @@
-FROM alpine/git:latest as git
+FROM alpine/git:latest as gitclone
 WORKDIR /src
 RUN git clone https://github.com/dagmanov/faza.git .
 
 FROM node:6 as install
-COPY --from=git /src /src
-RUN apt-get update && apt-get install -yq python3-pip
+COPY --from=gitclone /src /src
+RUN apt-get update && apt-get install -y python3-pip
 
 FROM install as build
 COPY --from=install /src /src
@@ -14,7 +14,7 @@ RUN npm cache clean && \
 RUN   npm install && \
      npm run build
 
-FROM build as gs
+FROM build as release
 RUN   pip3 install -r requirements.txt
 RUN python3 manage.py migrate
 EXPOSE 8000 
