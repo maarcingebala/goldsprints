@@ -13,7 +13,7 @@ An attempt to build an application for [Goldsprint competition](https://en.wikip
 ## Installation on Docker
 You can build and run application inside the docker container:
 
-1. Build docker image: `docker build . -t gs --no-cache`
+1. Build docker image: `docker build . -t gs:latest --no-cache`
 2. Start container: `docker-compose up -d`
 3. Go to `http://localhost:8000` in your browser to access the application
 
