@@ -10,7 +10,15 @@ An attempt to build an application for [Goldsprint competition](https://en.wikip
 3. We use Django as a backend for storing data about races and players.
 4. Dynamic pages that display speed and distances of players during a race are rendered in React.
 
-## Installation
+## Installation on Docker
+You can build and run application inside the docker container:
+
+1. Build docker image: `docker build . -t gs:latest --no-cache`
+2. Start container: `docker-compose up -d`
+3. Go to `http://localhost:8000` in your browser to access the application
+
+
+## Installation on Linux host
 The application was developed and tested with: Ubuntu 15.10, Python 3.5.3 and Node.js 6.3.0.
 
 1. Build the static assets: `npm install` & `npm run build`
